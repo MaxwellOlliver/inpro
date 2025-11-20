@@ -1,29 +1,13 @@
 {
+  "extends": "@inpro/typescript-config/base.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "declaration": true,
-    "emitDeclarationOnly": false,
-    "declarationMap": true,
-    "sourceMap": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "target": "ES2022",
-    "module": "CommonJS",
+    "outDir": "dist",
+    "rootDir": "src",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "baseUrl": "./",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    },
-    "rootDir": "./src",
   },
   "include": [
-    "src/**/*",
+    "src"
   ],
   "exclude": [
     "node_modules",

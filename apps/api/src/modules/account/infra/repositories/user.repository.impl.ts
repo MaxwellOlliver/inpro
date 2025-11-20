@@ -9,7 +9,7 @@ import { UserMapper } from '../mappers/user.mapper';
 export class UserRepository implements IUserRepository {
   constructor(private readonly prisma: PrismaGateway) {}
 
-  async save(user: User): Promise<Result<User>> {
+  async save(user: User): Promise<Result<void>> {
     const userModel = UserMapper.fromDomainToModel(user);
 
     try {
@@ -19,7 +19,7 @@ export class UserRepository implements IUserRepository {
         create: userModel,
       });
 
-      return Ok(user);
+      return Ok(undefined);
     } catch (error) {
       return Err(error);
     }

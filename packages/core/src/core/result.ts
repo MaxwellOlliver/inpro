@@ -7,8 +7,8 @@
  * @template E - The error type (extends Error).
  */
 export class Result<T = unknown, E extends Error = Error> {
-  #value: T | E;
-  #isSuccess: boolean;
+  private value: T | E;
+  private isSuccess: boolean;
 
   /**
    * Internal constructor. Use `Result.ok()` or `Result.err()` to instantiate.
@@ -17,8 +17,8 @@ export class Result<T = unknown, E extends Error = Error> {
    * @param isSuccess - Whether this is a success result.
    */
   constructor(value: T | E, isSuccess: boolean) {
-    this.#value = value;
-    this.#isSuccess = isSuccess;
+    this.value = value;
+    this.isSuccess = isSuccess;
   }
 
   /**
@@ -29,10 +29,10 @@ export class Result<T = unknown, E extends Error = Error> {
    */
   unwrap(): T {
     if (this.isOk()) {
-      return this.#value as T;
+      return this.value as T;
     }
 
-    throw this.#value as E;
+    throw this.value as E;
   }
 
   /**
@@ -43,7 +43,7 @@ export class Result<T = unknown, E extends Error = Error> {
    */
   unwrapErr(): E {
     if (this.isErr()) {
-      return this.#value as E;
+      return this.value as E;
     }
 
     throw new Error('Tried to unwrapErr() on a successful Result');
@@ -58,7 +58,7 @@ export class Result<T = unknown, E extends Error = Error> {
    */
   expect(msg: string | E): T {
     if (this.isOk()) {
-      return this.#value as T;
+      return this.value as T;
     }
 
     if (msg instanceof Error) {
@@ -74,7 +74,7 @@ export class Result<T = unknown, E extends Error = Error> {
    * @returns `true` if the result is OK.
    */
   isOk(): this is Result<T, never> {
-    return this.#isSuccess;
+    return this.isSuccess;
   }
 
   /**
@@ -83,7 +83,7 @@ export class Result<T = unknown, E extends Error = Error> {
    * @returns `true` if the result is an error.
    */
   isErr(): this is Result<never, E> {
-    return !this.#isSuccess;
+    return !this.isSuccess;
   }
 
   /**
@@ -92,7 +92,7 @@ export class Result<T = unknown, E extends Error = Error> {
    * @returns The error value or null.
    */
   getErr(): E | null {
-    return this.isErr() ? (this.#value as E) : null;
+    return this.isErr() ? (this.value as E) : null;
   }
 
   /**
