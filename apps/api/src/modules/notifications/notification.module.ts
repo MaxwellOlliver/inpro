@@ -17,6 +17,8 @@ import { notificationSenderServiceProvider } from './infra/nest/providers/notifi
 import { notificationRepositoryProvider } from './infra/nest/providers/notification.repository.provider';
 import { ValidateNotificationTemplateService } from './application/services/validate-notification-template.service';
 import { notificationStrategiesProvider } from './infra/nest/providers/notification-strategies.provider';
+import { EmailNotificationSenderStrategy } from './infra/strategies/notification-sender/email-notification-sender.strategy';
+import { SmsNotificationSenderStrategy } from './infra/strategies/notification-sender/sms-notification-sender.strategy';
 
 @Module({
   imports: [
@@ -45,6 +47,10 @@ import { notificationStrategiesProvider } from './infra/nest/providers/notificat
     QueueNotificationEventHandler,
     NotificationProcessor,
     MailSenderGateway,
+
+    // Strategies
+    EmailNotificationSenderStrategy,
+    SmsNotificationSenderStrategy,
 
     // Providers
     notificationRepositoryProvider,

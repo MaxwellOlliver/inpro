@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { SessionCreatedHandler } from '@modules/auth/application/events/session/session-created.handler';
-import { PrismaGateway } from '@shared/gateways/db/prisma.gateway';
 import { HashModule } from '@shared/security/hash/hash.module';
 import { ListUserSessionsHandler } from './application/queries/session/list-user-sessions.handler';
 import { RevokeSessionHandler } from '@modules/auth/application/commands/session/handlers/revoke-session.handler';
@@ -51,10 +50,6 @@ import { RevokeSessionController } from './presentation/controllers/sessions/rev
   providers: [
     listUserSessionsProvider,
     SessionRepositoryProvider,
-
-    // Gateways
-    PrismaGateway,
-
     // Services
     ValidateUserCredentialsService,
     GenerateTokensService,

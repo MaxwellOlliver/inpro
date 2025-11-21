@@ -4,12 +4,14 @@ import { CreateUserCommand } from '@modules/account/application/commands/user/cr
 import { UserPresenter } from '../../presenters/user.presenter';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateUserDTO } from '../../dtos/user/create-user.dto';
+import { Public } from '@shared/security/jwt/decorators/public.decorator';
 
 @ApiTags('Users')
 @Controller('users')
 export class CreateUserController {
   constructor(private readonly commandBus: CommandBus) {}
 
+  @Public()
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
   @ApiBody({ type: CreateUserDTO })
