@@ -6,7 +6,7 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { DocumentBuilder } from '@nestjs/swagger';
 import { HttpExceptionFilter } from '@shared/nest/filters/http-exception.filter';
 import { patchNestjsSwagger } from '@anatine/zod-nestjs';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { ResponseInterceptor } from '@shared/nest/interceptors/response.interceptor';
 
 async function bootstrap() {

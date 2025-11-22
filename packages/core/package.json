@@ -1,8 +1,6 @@
 {
   "name": "@inpro/core",
   "version": "1.0.2",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
