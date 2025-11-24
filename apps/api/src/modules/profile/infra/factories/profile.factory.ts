@@ -9,9 +9,8 @@ interface ProfileProps {
   name: string;
   userName: string;
   bio: string;
-  about: string;
-  avatarUrl: string;
-  bannerUrl: string;
+  avatarUrl: string | null;
+  bannerUrl: string | null;
   location: string;
 }
 
@@ -23,7 +22,6 @@ export class ProfileFactory {
       name: data.name,
       userName: data.userName,
       bio: data.bio,
-      about: data.about,
       avatarUrl: data.avatarUrl,
       bannerUrl: data.bannerUrl,
       location: data.location,

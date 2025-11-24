@@ -13,7 +13,7 @@ export class ProfileRepositoryImpl implements IProfileRepository {
     const profileModel = ProfileMapper.fromDomainToModel(profile);
 
     const result = await Result.fromPromise(
-      this.prisma.profile.upsert({
+      this.prisma.client.profile.upsert({
         where: { id: profileModel.id },
         update: profileModel,
         create: profileModel,
@@ -29,33 +29,37 @@ export class ProfileRepositoryImpl implements IProfileRepository {
 
   async findByUserId(userId: string): Promise<Result<Profile>> {
     const result = await Result.fromPromise(
-      this.prisma.profile.findUnique({ where: { userId } }),
+      this.prisma.client.profile.findUnique({ where: { userId } }),
     );
 
     if (result.isErr()) {
       return Err(result.getErr()!);
     }
 
-    if (!result.unwrap()) {
+    const profile = result.unwrap();
+
+    if (!profile) {
       return Err(new Error('Profile not found'));
     }
 
-    return Ok(ProfileMapper.fromModelToDomain(result.unwrap()!));
+    return Ok(ProfileMapper.fromModelToDomain(profile));
   }
 
   async findById(id: string): Promise<Result<Profile>> {
     const result = await Result.fromPromise(
-      this.prisma.profile.findUnique({ where: { id } }),
+      this.prisma.client.profile.findUnique({ where: { id } }),
     );
 
     if (result.isErr()) {
       return Err(result.getErr()!);
     }
 
-    if (!result.unwrap()) {
+    const profile = result.unwrap();
+
+    if (!profile) {
       return Err(new Error('Profile not found'));
     }
 
-    return Ok(ProfileMapper.fromModelToDomain(result.unwrap()!));
+    return Ok(ProfileMapper.fromModelToDomain(profile));
   }
 }

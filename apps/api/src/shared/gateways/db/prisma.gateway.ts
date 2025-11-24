@@ -6,7 +6,7 @@ import { EnvService } from '@config/env/env.service';
 @Injectable()
 export class PrismaGateway implements OnModuleInit {
   private readonly adapter: PrismaPg;
-  private readonly client: PrismaClient;
+  readonly client: PrismaClient;
 
   constructor(envService: EnvService) {
     this.adapter = new PrismaPg({

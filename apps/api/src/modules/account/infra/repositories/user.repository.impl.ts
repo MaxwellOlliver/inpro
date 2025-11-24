@@ -13,7 +13,7 @@ export class UserRepository implements IUserRepository {
     const userModel = UserMapper.fromDomainToModel(user);
 
     try {
-      await this.prisma.user.upsert({
+      await this.prisma.client.user.upsert({
         where: { id: userModel.id },
         update: userModel,
         create: userModel,
@@ -27,7 +27,7 @@ export class UserRepository implements IUserRepository {
 
   async findByEmail(email: string): Promise<Result<User>> {
     try {
-      const user = await this.prisma.user.findUnique({
+      const user = await this.prisma.client.user.findUnique({
         where: { email },
       });
 
@@ -45,7 +45,7 @@ export class UserRepository implements IUserRepository {
 
   async findById(id: string): Promise<Result<User>> {
     try {
-      const user = await this.prisma.user.findUnique({
+      const user = await this.prisma.client.user.findUnique({
         where: { id },
       });
 

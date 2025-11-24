@@ -1,22 +1,21 @@
 import { Profile } from '@modules/profile/domain/aggregates/profile.aggregate';
-import { Profile as ProfileModel } from '@prisma/client';
+import { Profile as ProfileModel } from '@generated/prisma/client';
 import { ProfileFactory } from '../factories/profile.factory';
 import { ID } from '@inpro/core';
 
 export class ProfileMapper {
-  static fromModelToDomain(notification: ProfileModel): Profile {
+  static fromModelToDomain(profile: ProfileModel): Profile {
     return ProfileFactory.make({
-      id: ID.create(notification.id).unwrap(),
-      userId: ID.create(notification.userId).unwrap(),
-      name: notification.name,
-      userName: notification.userName,
-      bio: notification.bio,
-      about: notification.about,
-      avatarUrl: notification.avatarUrl,
-      bannerUrl: notification.bannerUrl,
-      location: notification.location,
-      createdAt: notification.createdAt,
-      updatedAt: notification.updatedAt,
+      id: ID.create(profile.id).unwrap(),
+      userId: ID.create(profile.userId).unwrap(),
+      name: profile.name,
+      userName: profile.userName,
+      bio: profile.bio,
+      avatarUrl: profile.avatarUrl ?? null,
+      bannerUrl: profile.bannerUrl ?? null,
+      location: profile.location,
+      createdAt: profile.createdAt,
+      updatedAt: profile.updatedAt,
     });
   }
 
@@ -39,8 +38,8 @@ export class ProfileMapper {
       userId,
       userName,
       bio,
-      avatarUrl,
-      bannerUrl,
+      avatarUrl: avatarUrl ?? null,
+      bannerUrl: bannerUrl ?? null,
       location,
       createdAt,
       updatedAt,

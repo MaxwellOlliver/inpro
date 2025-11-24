@@ -7,8 +7,8 @@ interface ProfileProps {
   name: string;
   userName: string;
   bio: string;
-  avatarUrl?: string;
-  bannerUrl?: string;
+  avatarUrl?: string | null;
+  bannerUrl?: string | null;
   location: string;
   createdAt: Date;
   updatedAt: Date;
@@ -21,8 +21,8 @@ export class Profile extends Aggregate<ProfileProps> {
     name: z.string(),
     userName: z.string(),
     bio: z.string(),
-    avatarUrl: z.string().optional(),
-    bannerUrl: z.string().optional(),
+    avatarUrl: z.string().nullable(),
+    bannerUrl: z.string().nullable(),
     location: z.string(),
     createdAt: z.date(),
     updatedAt: z.date(),
@@ -37,7 +37,11 @@ export class Profile extends Aggregate<ProfileProps> {
       return Err(new Error('Invalid profile props'));
     }
 
-    const profile = new Profile(props);
+    const profile = new Profile({
+      ...props,
+      avatarUrl: props.avatarUrl ?? null,
+      bannerUrl: props.bannerUrl ?? null,
+    });
 
     return Ok(profile);
   }
