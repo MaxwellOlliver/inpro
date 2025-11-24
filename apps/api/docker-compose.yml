@@ -28,4 +28,4 @@ services:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: minio123
     volumes:
-      - ./minio-data:/data
+      - ./apps/api/minio-data:/data
