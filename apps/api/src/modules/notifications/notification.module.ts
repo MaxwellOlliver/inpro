@@ -11,7 +11,7 @@ import { SendNotificationController } from './presentation/controllers/send-noti
 import { QueueNotificationEventHandler } from './application/events/handlers/queue-notification.handler';
 import { BullModule } from '@nestjs/bullmq';
 import { NotificationProcessor } from './infra/queue/processors/notification.processor';
-import { MailSenderGateway } from '@shared/gateways/mail/mail-sender.gateway';
+import { MailSenderGateway } from '@shared/gateways/mail-sender';
 import { notificationQueueServiceProvider } from './infra/nest/providers/notification-queue.service.provider';
 import { notificationSenderServiceProvider } from './infra/nest/providers/notification-sender.service.provider';
 import { notificationRepositoryProvider } from './infra/nest/providers/notification.repository.provider';

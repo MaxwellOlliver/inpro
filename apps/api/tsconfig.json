@@ -30,10 +30,14 @@
       ],
       "@config/*": [
         "./src/config/*"
+      ],
+      "@generated/*": [
+        "./generated/*"
       ]
     }
   },
   "include": [
-    "./src"
+    "./src",
+    "./prisma.config.ts"
   ],
 }

@@ -7,9 +7,8 @@ interface ProfileProps {
   name: string;
   userName: string;
   bio: string;
-  about: string;
-  avatarUrl: string;
-  bannerUrl: string;
+  avatarUrl?: string;
+  bannerUrl?: string;
   location: string;
   createdAt: Date;
   updatedAt: Date;
@@ -22,9 +21,8 @@ export class Profile extends Aggregate<ProfileProps> {
     name: z.string(),
     userName: z.string(),
     bio: z.string(),
-    about: z.string(),
-    avatarUrl: z.string(),
-    bannerUrl: z.string(),
+    avatarUrl: z.string().optional(),
+    bannerUrl: z.string().optional(),
     location: z.string(),
     createdAt: z.date(),
     updatedAt: z.date(),
