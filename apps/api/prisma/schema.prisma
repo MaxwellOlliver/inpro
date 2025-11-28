@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
   moduleFormat = "commonjs"
 }
 
@@ -22,18 +22,42 @@ model User {
 }
 
 model Profile {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id])
-  name      String
-  userName  String   @unique
-  bio       String
-  avatarUrl String?
-  bannerUrl String?
+  id       String @id @default(uuid())
+  userId   String @unique
+  user     User   @relation(fields: [userId], references: [id])
+  name     String
+  userName String @unique
+  bio      String
+
+  avatarId String? @unique
+  bannerId String? @unique
+
   location  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([userId, userName])
   @@map("profiles")
+}
+
+model Media {
+  id        String    @id @default(uuid())
+  url       String
+  type      MediaType @default(IMAGE)
+  size      Int
+  purpose   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // No relation with Media because we don't want to add back-relations for every relation with Media
+
+  @@map("media")
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+  OTHER
 }
