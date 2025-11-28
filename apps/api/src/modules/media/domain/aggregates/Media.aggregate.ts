@@ -1,47 +1,62 @@
 import { Aggregate, Err, ID, Ok, Result } from '@inpro/core';
 import { MediaType } from '../enums/media-type.enum';
-import z from 'zod';
 
 interface MediaProps {
-  id?: ID;
+  id: ID;
   url: string;
   type: MediaType;
   size: number;
-  purpose: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  purpose?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export class Media extends Aggregate<MediaProps> {
-  static readonly schema = z.object({
-    id: z.optional(z.custom<ID>((value) => value instanceof ID)),
-    url: z.string(),
-    type: z.nativeEnum(MediaType),
-    size: z.number(),
-    purpose: z.string(),
-    createdAt: z.date().optional(),
-    updatedAt: z.date().optional(),
-  });
+type CreateMediaProps = Omit<MediaProps, 'id' | 'createdAt' | 'updatedAt'> & {
+  id?: ID;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
 
+export class Media extends Aggregate<MediaProps> {
   private constructor(props: MediaProps) {
     super(props);
   }
 
-  static create(props: MediaProps): Result<Media> {
-    if (!Media.isValidProps(props)) {
-      return Err(new Error('Invalid media props'));
+  static create(raw: CreateMediaProps): Result<Media> {
+    const error = Media.validateProps(raw);
+
+    if (error) {
+      return Err(error);
     }
 
+    const now = new Date();
+
     const media = new Media({
-      ...props,
-      createdAt: props.createdAt ?? new Date(),
-      updatedAt: props.updatedAt ?? new Date(),
+      id: raw.id ?? ID.create().unwrap(),
+      url: raw.url.trim(),
+      type: raw.type,
+      size: raw.size,
+      purpose: raw.purpose,
+      createdAt: raw.createdAt ?? now,
+      updatedAt: raw.updatedAt ?? now,
     });
 
     return Ok(media);
   }
 
-  static isValidProps(props: MediaProps) {
-    return Media.schema.safeParse(props).success;
+  private static validateProps(props: CreateMediaProps): Error | null {
+    if (!props.url) {
+      return new Error('Media url is required');
+    }
+
+    if (!Object.values(MediaType).includes(props.type)) {
+      return new Error('Invalid media type');
+    }
+
+    if (!Number.isFinite(props.size) || props.size <= 0) {
+      return new Error('Media size must be greater than zero');
+    }
+
+    return null;
   }
 }
