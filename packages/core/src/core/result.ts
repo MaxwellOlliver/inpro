@@ -7,8 +7,8 @@
  * @template E - The error type (extends Error).
  */
 export class Result<T = unknown, E extends Error = Error> {
-  private value: T | E;
-  private isSuccess: boolean;
+  #value: T | E;
+  #isSuccess: boolean;
 
   /**
    * Internal constructor. Use `Result.ok()` or `Result.err()` to instantiate.
@@ -17,8 +17,8 @@ export class Result<T = unknown, E extends Error = Error> {
    * @param isSuccess - Whether this is a success result.
    */
   constructor(value: T | E, isSuccess: boolean) {
-    this.value = value;
-    this.isSuccess = isSuccess;
+    this.#value = value;
+    this.#isSuccess = isSuccess;
   }
 
   /**
@@ -29,11 +29,18 @@ export class Result<T = unknown, E extends Error = Error> {
    */
   unwrap(): T {
     if (this.isOk()) {
-      return this.value as T;
+      return this.#value as T;
     }
 
-    throw this.value as E;
+    throw this.#value as E;
   }
+
+  /**
+   * Returns the success value.
+   *
+   * @returns The success value.
+   * @throws The error value if this result is an error.
+   */
 
   /**
    * Returns the error value or throws an error if it's a successful result.
@@ -43,7 +50,7 @@ export class Result<T = unknown, E extends Error = Error> {
    */
   unwrapErr(): E {
     if (this.isErr()) {
-      return this.value as E;
+      return this.#value as E;
     }
 
     throw new Error('Tried to unwrapErr() on a successful Result');
@@ -58,7 +65,7 @@ export class Result<T = unknown, E extends Error = Error> {
    */
   expect(msg: string | E): T {
     if (this.isOk()) {
-      return this.value as T;
+      return this.#value as T;
     }
 
     if (msg instanceof Error) {
@@ -74,7 +81,7 @@ export class Result<T = unknown, E extends Error = Error> {
    * @returns `true` if the result is OK.
    */
   isOk(): this is Result<T, never> {
-    return this.isSuccess;
+    return this.#isSuccess;
   }
 
   /**
@@ -83,7 +90,7 @@ export class Result<T = unknown, E extends Error = Error> {
    * @returns `true` if the result is an error.
    */
   isErr(): this is Result<never, E> {
-    return !this.isSuccess;
+    return !this.#isSuccess;
   }
 
   /**
@@ -92,7 +99,7 @@ export class Result<T = unknown, E extends Error = Error> {
    * @returns The error value or null.
    */
   getErr(): E | null {
-    return this.isErr() ? (this.value as E) : null;
+    return this.isErr() ? (this.#value as E) : null;
   }
 
   /**
@@ -120,8 +127,8 @@ export class Result<T = unknown, E extends Error = Error> {
    * @param value - The success value.
    * @returns A `Result` representing success.
    */
-  static ok<T>(value: T): Result<T> {
-    return new Result<T, never>(value, true);
+  static ok<T = undefined>(value?: T): Result<T, never> {
+    return new Result<T, never>(value as T, true);
   }
 
   /**
@@ -130,8 +137,8 @@ export class Result<T = unknown, E extends Error = Error> {
    * @param error - The error value.
    * @returns A `Result` representing failure.
    */
-  static err<E extends Error>(error: E): Result<never, E> {
-    return new Result<never, E>(error, false);
+  static err<E extends Error>(error?: E): Result<never, E> {
+    return new Result<never, E>(error ?? (new Error() as E), false);
   }
 
   /**
@@ -156,8 +163,8 @@ export class Result<T = unknown, E extends Error = Error> {
  * @param value - The success value.
  * @returns A `Result` representing success.
  */
-export function Ok<T>(value: T): Result<T, never> {
-  return new Result<T, never>(value, true);
+export function Ok<T = undefined>(value?: T): Result<T, never> {
+  return new Result<T, never>(value as T, true);
 }
 
 /**
@@ -170,13 +177,16 @@ export function Err<E extends Error>(error: E): Result<never, E> {
   return new Result<never, E>(error, false);
 }
 
-/**
- * Combines an array of `Result` objects into a single `Result` object.
- */
 type ResultArray<T extends readonly unknown[], E extends Error> = {
   [K in keyof T]: Result<T[K], E>;
 };
 
+/**
+ * Combines an array of `Result` objects into a single `Result` object.
+ *
+ * @param results - The array of `Result` objects.
+ * @returns A `Result` representing the combined result.
+ */
 export function Combine<T extends readonly unknown[], E extends Error>(
   results: ResultArray<T, E>,
 ): Result<T, E> {
@@ -190,4 +200,22 @@ export function Combine<T extends readonly unknown[], E extends Error>(
   }
 
   return Ok(values as unknown as T);
+}
+
+/**
+ * Returns the first successful result from an array of `Result` objects.
+ *
+ * @param results - The array of `Result` objects.
+ * @returns A `Result` representing the first successful result.
+ */
+export function Some<T, E extends Error>(
+  results: ResultArray<T[], E>,
+): Result<T, E> {
+  for (const result of results) {
+    if (result.isOk()) {
+      return Ok(result.unwrap());
+    }
+  }
+
+  return Err(new Error('No results were successful') as E);
 }
