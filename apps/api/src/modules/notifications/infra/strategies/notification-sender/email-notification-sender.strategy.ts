@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { NotificationChannel } from '@modules/notifications/domain/enums/notification-channel.enum';
 import { NotificationSenderStrategy } from '@modules/notifications/domain/services/notification-sender-strategy.service';
 import { Notification } from '@modules/notifications/domain/aggregates/notification.aggregate';
-import { MailSenderGateway } from '@shared/gateways/mail-sender';
+import { MailSenderGateway } from '@shared/infra/mail-sender';
 import { EmailChannelData } from '@modules/notifications/domain/value-objects/email-channel-data.value-object';
 import * as Mustache from 'mustache';
 

@@ -1,6 +1,6 @@
 import { INotificationRepository } from '@modules/notifications/domain/interfaces/repositories/notification.repository';
 import { Injectable } from '@nestjs/common';
-import { MongooseGateway } from '@shared/gateways/db/mongoose.gateway';
+import { MongooseGateway } from '@shared/infra/db/mongoose.gateway';
 import { Notification } from '@modules/notifications/domain/aggregates/notification.aggregate';
 import { Err, Ok, Result } from '@inpro/core';
 import { TemplateManagerService } from '../services/template-manager.service';

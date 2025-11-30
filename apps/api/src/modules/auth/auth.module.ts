@@ -21,7 +21,7 @@ import { UpdateSessionRefreshTokenService } from './application/services/auth/up
 import { EncryptModule } from '@shared/security/encrypt/encrypt.module';
 import { listUserSessionsProvider } from './infra/nest/providers/list-user-sessions.service.provider';
 import { SessionRepositoryProvider } from './infra/nest/providers/session.repository.provider';
-import { MongooseGateway } from '@shared/gateways/db/mongoose.gateway';
+import { MongooseGateway } from '@shared/infra/db/mongoose.gateway';
 import { sessionSchema } from './infra/db/schemas/session.schema';
 import { RefreshTokenController } from './presentation/controllers/auth/refresh-token.controller';
 import { SignOutController } from './presentation/controllers/auth/sign-out.controller';

@@ -3,7 +3,7 @@ import { ISessionRepository } from '@modules/auth/domain/interfaces/repositories
 import { Err, Ok, Result } from '@inpro/core';
 import { Injectable } from '@nestjs/common';
 import { SessionMapper } from '../mappers/session.mapper';
-import { MongooseGateway } from '@shared/gateways/db/mongoose.gateway';
+import { MongooseGateway } from '@shared/infra/db/mongoose.gateway';
 import { SessionModel } from '../db/models/session.model';
 
 @Injectable()

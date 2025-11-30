@@ -4,7 +4,7 @@ import { Err, Ok, Result } from '@inpro/core';
 import { Paginated } from '@shared/utils/query-params';
 import { IListUserSessions } from '@modules/auth/application/interfaces/queries/list-user-sessions.query.interface';
 import { ListUserSessionsQuery } from '@modules/auth/application/queries/session/list-user-sessions.query';
-import { MongooseGateway } from '@shared/gateways/db/mongoose.gateway';
+import { MongooseGateway } from '@shared/infra/db/mongoose.gateway';
 
 @Injectable()
 export class ListUserSessions implements IListUserSessions {

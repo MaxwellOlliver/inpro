@@ -2,7 +2,7 @@ import { Err, Ok, Result } from '@inpro/core';
 import { Profile } from '@modules/profile/domain/aggregates/profile.aggregate';
 import { IProfileRepository } from '@modules/profile/domain/interfaces/repositories/profile.repository';
 import { Injectable } from '@nestjs/common';
-import { PrismaGateway } from '@shared/gateways/db/prisma.gateway';
+import { PrismaGateway } from '@shared/infra/db/prisma.gateway';
 import { ProfileMapper } from '../mappers/profile.mapper';
 
 @Injectable()
