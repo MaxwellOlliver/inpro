@@ -1,4 +1,3 @@
-// infra/cache/redis-client.provider.ts
 import { EnvService } from '@config/env/env.service';
 import { Logger, Provider } from '@nestjs/common';
 import { Redis } from 'ioredis';

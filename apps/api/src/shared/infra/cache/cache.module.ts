@@ -1,9 +1,16 @@
 import { Module } from '@nestjs/common';
-import { RedisCacheService } from './services/redis-cache.service';
-import { RedisClientProvider } from './providers/redis-client.provider';
+import { RedisModule } from './redis/redis.module';
+import { CacheGateway } from '@shared/application/gateways/cache.gateway';
+import { REDIS_CACHE } from './redis/tokens/redis.tokens';
 
 @Module({
-  providers: [RedisCacheService, RedisClientProvider],
-  exports: [RedisCacheService],
+  imports: [RedisModule],
+  providers: [
+    {
+      provide: CacheGateway,
+      useExisting: REDIS_CACHE,
+    },
+  ],
+  exports: [RedisModule, CacheGateway],
 })
 export class CacheModule {}
