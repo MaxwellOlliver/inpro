@@ -1,5 +1,4 @@
 import { Aggregate, Err, ID, Ok, Result } from '@inpro/core';
-import z from 'zod';
 
 interface ProfileProps {
   id?: ID;
@@ -14,39 +13,55 @@ interface ProfileProps {
   updatedAt: Date;
 }
 
-export class Profile extends Aggregate<ProfileProps> {
-  static readonly schema = z.object({
-    id: z.optional(z.custom<ID>((value) => value instanceof ID)),
-    userId: z.custom<ID>((value) => value instanceof ID),
-    name: z.string(),
-    userName: z.string(),
-    bio: z.string(),
-    avatarId: z.optional(z.custom<ID>((value) => value instanceof ID)),
-    bannerId: z.optional(z.custom<ID>((value) => value instanceof ID)),
-    location: z.string(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
-  });
+type CreateProfileProps = Omit<
+  ProfileProps,
+  'id' | 'createdAt' | 'updatedAt'
+> & {
+  id?: ID;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
 
+export class Profile extends Aggregate<ProfileProps> {
   private constructor(props: ProfileProps) {
     super(props);
   }
 
-  static create(props: ProfileProps): Result<Profile> {
-    if (!Profile.isValidProps(props)) {
-      return Err(new Error('Invalid profile props'));
+  static create(raw: CreateProfileProps): Result<Profile> {
+    const validateResult = Profile.validateProps(raw);
+
+    if (validateResult.isErr()) {
+      return Err(validateResult.unwrapErr());
     }
 
     const profile = new Profile({
-      ...props,
-      avatarId: props.avatarId ?? null,
-      bannerId: props.bannerId ?? null,
+      ...raw,
+      avatarId: raw.avatarId ?? null,
+      bannerId: raw.bannerId ?? null,
+      createdAt: raw.createdAt ?? new Date(),
+      updatedAt: raw.updatedAt ?? new Date(),
     });
 
     return Ok(profile);
   }
 
-  static isValidProps(props: ProfileProps) {
-    return Profile.schema.safeParse(props).success;
+  static validateProps(props: CreateProfileProps): Result<void> {
+    if (!props.userId) {
+      return Err(new Error('User ID is required'));
+    }
+
+    if (!props.name) {
+      return Err(new Error('Name is required'));
+    }
+
+    if (props.bio.length > 255) {
+      return Err(new Error('Bio must be less than 255 characters'));
+    }
+
+    if (props.userName.length > 60) {
+      return Err(new Error('UserName must be less than 255 characters'));
+    }
+
+    return Ok();
   }
 }
