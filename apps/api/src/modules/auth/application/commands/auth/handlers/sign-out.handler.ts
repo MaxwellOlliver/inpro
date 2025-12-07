@@ -2,23 +2,36 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BusinessException } from '@shared/exceptions/business.exception';
 import { SignOutCommand } from '../sign-out.command';
 import { ISessionRepository } from '@modules/auth/domain/interfaces/repositories/session.repository.interface';
-import { IJwtService } from '@shared/security/jwt/interfaces/jwt.service.interface';
+import { TokenPayload } from '@modules/auth/domain/value-objects/token-payload.value-object';
+import { TokenGateway } from '@shared/application/gateways/token.gateway';
 
 @CommandHandler(SignOutCommand)
 export class SignOutHandler implements ICommandHandler<SignOutCommand> {
   constructor(
     private readonly sessionRepository: ISessionRepository,
-    private readonly jwtService: IJwtService,
+    private readonly tokenGateway: TokenGateway,
   ) {}
 
   async execute(command: SignOutCommand): Promise<void> {
-    const tokenPayloadResult = this.jwtService.verify(command.dto.accessToken);
+    const tokenPayloadResult = this.tokenGateway.verify<Record<string, string>>(
+      command.dto.accessToken,
+    );
 
     if (tokenPayloadResult.isErr()) {
       throw new BusinessException('Invalid token', 'INVALID_TOKEN', 401);
     }
 
-    const tokenPayload = tokenPayloadResult.unwrap();
+    const originalTokenPayload = tokenPayloadResult.unwrap();
+
+    const tokenPayloadVO = TokenPayload.create({
+      sid: originalTokenPayload.sid,
+      sub: originalTokenPayload.sub,
+      email: originalTokenPayload.email,
+      deviceId: originalTokenPayload.deviceId,
+      jti: originalTokenPayload.jti,
+    });
+
+    const tokenPayload = tokenPayloadVO.unwrap();
 
     const sessionResult = await this.sessionRepository.findById(
       tokenPayload.get('sid'),

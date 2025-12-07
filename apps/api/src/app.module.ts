@@ -4,9 +4,9 @@ import { AuthModule } from '@modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { envSchema } from './config/env/env.schema';
 import { EnvModule } from './config/env/env.module';
-import { JwtModule } from '@shared/security/jwt/jwt.module';
+import { JwtModule } from '@shared/infra/security/jwt/jwt.module';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from '@shared/security/jwt/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@shared/infra/security/jwt/guards/jwt-auth.guard';
 import { NotificationModule } from '@modules/notifications/notification.module';
 import { BullModule } from '@nestjs/bullmq';
 

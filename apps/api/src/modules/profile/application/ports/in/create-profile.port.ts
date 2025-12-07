@@ -6,8 +6,8 @@ export type CreateProfileInputDTO = {
   userName: string;
   name: string;
   bio: string;
-  avatarUrl?: string;
-  bannerUrl?: string;
+  avatarId?: string;
+  bannerId?: string;
   location: string;
 };
 

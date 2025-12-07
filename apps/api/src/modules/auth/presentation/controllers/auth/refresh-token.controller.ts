@@ -12,7 +12,7 @@ import { RequiredValuePipe } from '@shared/nest/pipes/required-value.pipe';
 import { Response } from 'express';
 import { EnvService } from '@config/env/env.service';
 import { REFRESH_TOKEN_EXPIRATION } from '@shared/constants/refresh-token-expiration';
-import { Public } from '@shared/security/jwt/decorators/public.decorator';
+import { Public } from '@shared/infra/security/jwt/decorators/public.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')

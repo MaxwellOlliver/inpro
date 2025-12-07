@@ -13,6 +13,8 @@ export const envSchema = z.object({
   REDIS_HOST: z.string().default('localhost'),
   REDIS_PORT: z.string().default('6379').transform(Number),
   MAILERSEND_API_KEY: z.string(),
+  S3_REGION: z.string().default('us-east-1'),
+  S3_ENDPOINT: z.string().default('http://localhost:9000'),
 });
 
 export type Env = z.infer<typeof envSchema>;

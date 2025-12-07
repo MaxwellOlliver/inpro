@@ -3,18 +3,18 @@ import { ISessionRepository } from '@modules/auth/domain/interfaces/repositories
 import { Err, Ok, Result } from '@inpro/core';
 import { Injectable } from '@nestjs/common';
 import { SessionMapper } from '../mappers/session.mapper';
-import { MongooseGateway } from '@shared/infra/db/mongoose.gateway';
 import { SessionModel } from '../db/models/session.model';
+import { MongooseConnectionService } from '@shared/infra/db/mongoose/services/mongoose-connection.service';
 
 @Injectable()
 export class SessionRepository implements ISessionRepository {
-  constructor(private readonly mongoose: MongooseGateway) {}
+  constructor(private readonly mongooseConnection: MongooseConnectionService) {}
 
   async save(session: Session): Promise<Result<Session>> {
     const sessionModel = SessionMapper.fromDomainToModel(session);
 
     const sessionResult = await Result.fromPromise(
-      this.mongoose.models.Session.findOneAndUpdate(
+      this.mongooseConnection.models.Session.findOneAndUpdate(
         { _id: sessionModel._id },
         sessionModel,
         { upsert: true, new: true, setDefaultsOnInsert: true },
@@ -33,7 +33,7 @@ export class SessionRepository implements ISessionRepository {
     userId: string,
   ): Promise<Result<Session>> {
     const sessionResult = await Result.fromPromise(
-      this.mongoose.models.Session.findOne<SessionModel>({
+      this.mongooseConnection.models.Session.findOne<SessionModel>({
         deviceId,
         expiresAt: { $gt: new Date() },
         revokedAt: null,
@@ -52,7 +52,7 @@ export class SessionRepository implements ISessionRepository {
 
   async findByRefreshToken(refreshToken: string): Promise<Result<Session>> {
     const sessionResult = await Result.fromPromise(
-      this.mongoose.models.Session.findOne<SessionModel>({
+      this.mongooseConnection.models.Session.findOne<SessionModel>({
         refreshToken,
       }),
     );
@@ -68,7 +68,7 @@ export class SessionRepository implements ISessionRepository {
 
   async findById(id: string): Promise<Result<Session>> {
     const sessionResult = await Result.fromPromise(
-      this.mongoose.models.Session.findById<SessionModel>(id),
+      this.mongooseConnection.models.Session.findById<SessionModel>(id),
     );
 
     if (sessionResult.isErr() || !sessionResult.unwrap()) {
@@ -86,7 +86,7 @@ export class SessionRepository implements ISessionRepository {
     deviceId: string,
   ): Promise<Result<Session>> {
     const sessionResult = await Result.fromPromise(
-      this.mongoose.models.Session.findOne<SessionModel>({
+      this.mongooseConnection.models.Session.findOne<SessionModel>({
         _id,
         userId,
         deviceId,
@@ -104,7 +104,7 @@ export class SessionRepository implements ISessionRepository {
 
   async findAllByUserId(userId: string): Promise<Result<Session[]>> {
     const sessionResult = await Result.fromPromise(
-      this.mongoose.models.Session.find<SessionModel>({
+      this.mongooseConnection.models.Session.find<SessionModel>({
         userId,
       }),
     );
@@ -124,7 +124,7 @@ export class SessionRepository implements ISessionRepository {
 
   async delete(id: string): Promise<Result<void>> {
     const sessionResult = await Result.fromPromise(
-      this.mongoose.models.Session.findByIdAndDelete(id),
+      this.mongooseConnection.models.Session.findByIdAndDelete(id),
     );
 
     if (sessionResult.isErr() || !sessionResult.unwrap()) {

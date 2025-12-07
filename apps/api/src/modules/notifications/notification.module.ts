@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { SendNotificationHandler } from './application/commands/handlers/send-notification.handler';
-import { MongooseGateway } from '@shared/infra/db/mongoose.gateway';
 import {
   emailNotificationSchema,
   notificationSchema,
@@ -11,7 +10,6 @@ import { SendNotificationController } from './presentation/controllers/send-noti
 import { QueueNotificationEventHandler } from './application/events/handlers/queue-notification.handler';
 import { BullModule } from '@nestjs/bullmq';
 import { NotificationProcessor } from './infra/queue/processors/notification.processor';
-import { MailSenderGateway } from '@shared/infra/mail-sender';
 import { notificationQueueServiceProvider } from './infra/nest/providers/notification-queue.service.provider';
 import { notificationSenderServiceProvider } from './infra/nest/providers/notification-sender.service.provider';
 import { notificationRepositoryProvider } from './infra/nest/providers/notification.repository.provider';
@@ -19,13 +17,15 @@ import { ValidateNotificationTemplateService } from './application/services/vali
 import { notificationStrategiesProvider } from './infra/nest/providers/notification-strategies.provider';
 import { EmailNotificationSenderStrategy } from './infra/strategies/notification-sender/email-notification-sender.strategy';
 import { SmsNotificationSenderStrategy } from './infra/strategies/notification-sender/sms-notification-sender.strategy';
+import { MongooseModule } from '@shared/infra/db/mongoose/mongoose.module';
+import { MailModule } from '@shared/infra/mail/mail.module';
 
 @Module({
   imports: [
     BullModule.registerQueue({
       name: 'notification',
     }),
-    MongooseGateway.withSchemas({
+    MongooseModule.register({
       name: 'Notification',
       schema: notificationSchema,
       discriminators: [
@@ -39,6 +39,7 @@ import { SmsNotificationSenderStrategy } from './infra/strategies/notification-s
         },
       ],
     }),
+    MailModule,
   ],
   controllers: [SendNotificationController],
   providers: [
@@ -46,7 +47,6 @@ import { SmsNotificationSenderStrategy } from './infra/strategies/notification-s
     TemplateManagerService,
     QueueNotificationEventHandler,
     NotificationProcessor,
-    MailSenderGateway,
 
     // Strategies
     EmailNotificationSenderStrategy,

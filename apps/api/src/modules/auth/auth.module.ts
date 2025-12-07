@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SessionCreatedHandler } from '@modules/auth/application/events/session/session-created.handler';
-import { HashModule } from '@shared/security/hash/hash.module';
+import { HashModule } from '@shared/infra/security/hash/hash.module';
 import { ListUserSessionsHandler } from './application/queries/session/list-user-sessions.handler';
 import { RevokeSessionHandler } from '@modules/auth/application/commands/session/handlers/revoke-session.handler';
 import { SessionRevokedHandler } from '@modules/auth/application/events/session/session-revoked.handler';
@@ -15,18 +15,18 @@ import { RetrieveSessionByTokenService } from './application/services/session/re
 import { RefreshTokenHandler } from '@modules/auth/application/commands/auth/handlers/refresh-token.handler';
 import { ValidateSessionHandler } from '@modules/auth/application/commands/auth/handlers/validate-session.handler';
 import { EnvModule } from '@config/env/env.module';
-import { JwtModule } from '@shared/security/jwt/jwt.module';
+import { JwtModule } from '@shared/infra/security/jwt/jwt.module';
 import { SignOutHandler } from '@modules/auth/application/commands/auth/handlers/sign-out.handler';
 import { UpdateSessionRefreshTokenService } from './application/services/auth/update-session-refresh-token.service';
-import { EncryptModule } from '@shared/security/encrypt/encrypt.module';
+import { EncryptModule } from '@shared/infra/security/encrypt/encrypt.module';
 import { listUserSessionsProvider } from './infra/nest/providers/list-user-sessions.service.provider';
 import { SessionRepositoryProvider } from './infra/nest/providers/session.repository.provider';
-import { MongooseGateway } from '@shared/infra/db/mongoose.gateway';
 import { sessionSchema } from './infra/db/schemas/session.schema';
 import { RefreshTokenController } from './presentation/controllers/auth/refresh-token.controller';
 import { SignOutController } from './presentation/controllers/auth/sign-out.controller';
 import { RetrieveUserSessionsController } from './presentation/controllers/sessions/retrieve-user-sessions.controller';
 import { RevokeSessionController } from './presentation/controllers/sessions/revoke-session.controller';
+import { MongooseModule } from '@shared/infra/db/mongoose/mongoose.module';
 
 @Module({
   imports: [
@@ -35,7 +35,7 @@ import { RevokeSessionController } from './presentation/controllers/sessions/rev
     AccountModule,
     JwtModule,
     EnvModule,
-    MongooseGateway.withSchemas({
+    MongooseModule.register({
       name: 'Session',
       schema: sessionSchema,
     }),

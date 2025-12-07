@@ -1,19 +1,20 @@
-import { PrismaGateway } from '@shared/infra/db/prisma.gateway';
 import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository.interface';
 import { User } from '@modules/account/domain/aggregates/user.aggregate';
 import { Err, Ok, Result } from '@inpro/core';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UserMapper } from '../mappers/user.mapper';
+import { PrismaClient } from '@generated/prisma/client';
+import { PRISMA_CLIENT } from '@shared/infra/db/prisma/tokens/prisma.tokens';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
-  constructor(private readonly prisma: PrismaGateway) {}
+  constructor(@Inject(PRISMA_CLIENT) private readonly prisma: PrismaClient) {}
 
   async save(user: User): Promise<Result<void>> {
     const userModel = UserMapper.fromDomainToModel(user);
 
     try {
-      await this.prisma.client.user.upsert({
+      await this.prisma.user.upsert({
         where: { id: userModel.id },
         update: userModel,
         create: userModel,
@@ -27,7 +28,7 @@ export class UserRepository implements IUserRepository {
 
   async findByEmail(email: string): Promise<Result<User>> {
     try {
-      const user = await this.prisma.client.user.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: { email },
       });
 
@@ -45,7 +46,7 @@ export class UserRepository implements IUserRepository {
 
   async findById(id: string): Promise<Result<User>> {
     try {
-      const user = await this.prisma.client.user.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: { id },
       });
 

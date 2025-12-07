@@ -1,15 +1,15 @@
 import { Ok, Result } from '@inpro/core';
 import { Injectable } from '@nestjs/common';
-import { IJwtService } from '@shared/security/jwt/interfaces/jwt.service.interface';
 import { User } from '@modules/account/domain/aggregates/user.aggregate';
 import { TokenPayload } from '@modules/auth/domain/value-objects/token-payload.value-object';
 import { EnvService } from '@config/env/env.service';
 import { randomUUID } from 'crypto';
+import { TokenGateway } from '@shared/application/gateways/token.gateway';
 
 @Injectable()
 export class GenerateTokensService {
   constructor(
-    private readonly jwtService: IJwtService,
+    private readonly tokenGateway: TokenGateway,
     private readonly envService: EnvService,
   ) {}
 
@@ -28,11 +28,11 @@ export class GenerateTokensService {
       jti: randomUUID(),
     }).unwrap();
 
-    const accessToken = this.jwtService.sign(payload, {
+    const accessToken = this.tokenGateway.sign(payload.toObject(), {
       expiresIn: this.envService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME'),
       secret: this.envService.get('JWT_SECRET'),
     });
-    const refreshToken = this.jwtService.sign(payload, {
+    const refreshToken = this.tokenGateway.sign(payload.toObject(), {
       expiresIn: this.envService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME'),
       secret: this.envService.get('JWT_SECRET'),
     });

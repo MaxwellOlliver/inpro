@@ -11,7 +11,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { SignInOutputDTO } from '@modules/auth/application/ports/in/auth/sign-in.port';
-import { Public } from '@shared/security/jwt/decorators/public.decorator';
+import { Public } from '@shared/infra/security/jwt/decorators/public.decorator';
 import { EnvService } from '@config/env/env.service';
 import { Response } from 'express';
 import { REFRESH_TOKEN_EXPIRATION } from '@shared/constants/refresh-token-expiration';

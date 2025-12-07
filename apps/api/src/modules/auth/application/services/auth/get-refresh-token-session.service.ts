@@ -4,14 +4,15 @@ import { ISessionRepository } from '@modules/auth/domain/interfaces/repositories
 import { Session } from '@modules/auth/domain/aggregates/session.aggregate';
 import { User } from '@modules/account/domain/aggregates/user.aggregate';
 import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository.interface';
-import { IJwtService } from '@shared/security/jwt/interfaces/jwt.service.interface';
-import { IEncryptService } from '@shared/security/encrypt/interfaces/encrypt.service.interface';
+import { EncryptGateway } from '@shared/application/gateways/encrypt.gateway';
+import { TokenGateway } from '@shared/application/gateways/token.gateway';
+import { TokenPayload } from '@modules/auth/domain/value-objects/token-payload.value-object';
 
 @Injectable()
 export class GetRefreshTokenSessionService {
   constructor(
-    private readonly encryptService: IEncryptService,
-    private readonly jwtService: IJwtService,
+    private readonly encryptGateway: EncryptGateway,
+    private readonly tokenGateway: TokenGateway,
     private readonly sessionRepository: ISessionRepository,
     private readonly userRepository: IUserRepository,
   ) {}
@@ -19,14 +20,25 @@ export class GetRefreshTokenSessionService {
   async execute(
     refreshToken: string,
   ): Promise<Result<{ session: Session; user: User }>> {
-    const tokenPayload = this.jwtService.verify(refreshToken);
+    const tokenPayload =
+      this.tokenGateway.verify<Record<string, string>>(refreshToken);
 
     if (tokenPayload.isErr()) {
       return Err(new Error('Invalid refresh token'));
     }
 
+    const originalTokenPayload = tokenPayload.unwrap();
+
+    const tokenPayloadVO = TokenPayload.create({
+      sid: originalTokenPayload.sid,
+      sub: originalTokenPayload.sub,
+      email: originalTokenPayload.email,
+      deviceId: originalTokenPayload.deviceId,
+      jti: originalTokenPayload.jti,
+    }).unwrap();
+
     const sessionResult = await this.sessionRepository.findById(
-      tokenPayload.unwrap().get('sid'),
+      tokenPayloadVO.get('sid'),
     );
 
     if (sessionResult.isErr()) {
@@ -36,9 +48,9 @@ export class GetRefreshTokenSessionService {
     const session = sessionResult.unwrap();
 
     const refreshTokenDigest =
-      this.encryptService.generateHmacDigest(refreshToken);
+      this.encryptGateway.generateHmacDigest(refreshToken);
 
-    const isRefreshTokenValid = this.encryptService.compareHmacDigests(
+    const isRefreshTokenValid = this.encryptGateway.compareHmacDigests(
       refreshTokenDigest.unwrap(),
       session.get('refreshTokenDigest').get('value'),
     );
@@ -50,7 +62,7 @@ export class GetRefreshTokenSessionService {
     if (
       session.isExpired ||
       session.isRevoked ||
-      session.get('userId').value() !== tokenPayload.unwrap().get('sub')
+      session.get('userId').value() !== tokenPayloadVO.get('sub')
     ) {
       return Err(new Error('Session is invalid'));
     }

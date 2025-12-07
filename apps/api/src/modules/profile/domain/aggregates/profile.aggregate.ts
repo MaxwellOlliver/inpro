@@ -7,8 +7,8 @@ interface ProfileProps {
   name: string;
   userName: string;
   bio: string;
-  avatarUrl?: string | null;
-  bannerUrl?: string | null;
+  avatarId?: ID | null;
+  bannerId?: ID | null;
   location: string;
   createdAt: Date;
   updatedAt: Date;
@@ -21,8 +21,8 @@ export class Profile extends Aggregate<ProfileProps> {
     name: z.string(),
     userName: z.string(),
     bio: z.string(),
-    avatarUrl: z.string().nullable(),
-    bannerUrl: z.string().nullable(),
+    avatarId: z.optional(z.custom<ID>((value) => value instanceof ID)),
+    bannerId: z.optional(z.custom<ID>((value) => value instanceof ID)),
     location: z.string(),
     createdAt: z.date(),
     updatedAt: z.date(),
@@ -39,8 +39,8 @@ export class Profile extends Aggregate<ProfileProps> {
 
     const profile = new Profile({
       ...props,
-      avatarUrl: props.avatarUrl ?? null,
-      bannerUrl: props.bannerUrl ?? null,
+      avatarId: props.avatarId ?? null,
+      bannerId: props.bannerId ?? null,
     });
 
     return Ok(profile);

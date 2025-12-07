@@ -6,7 +6,7 @@ import { BusinessException } from '@shared/exceptions/business.exception';
 import { RefreshTokenDigest } from '@modules/auth/domain/value-objects/refresh-token-hash.value-object';
 import { ID } from '@inpro/core';
 import { CreateSessionOutputDTO } from '@modules/auth/application/ports/in/session/create-session.port';
-import { IEncryptService } from '@shared/security/encrypt/interfaces/encrypt.service.interface';
+import { EncryptGateway } from '@shared/application/gateways/encrypt.gateway';
 
 @CommandHandler(CreateSessionCommand)
 export class CreateSessionHandler
@@ -14,7 +14,7 @@ export class CreateSessionHandler
 {
   constructor(
     private readonly sessionRepository: ISessionRepository,
-    private readonly encryptService: IEncryptService,
+    private readonly encryptGateway: EncryptGateway,
   ) {}
 
   async execute(
@@ -33,7 +33,7 @@ export class CreateSessionHandler
       );
     }
 
-    const digest = this.encryptService.generateHmacDigest(
+    const digest = this.encryptGateway.generateHmacDigest(
       command.dto.refreshToken,
     );
     const refreshTokenDigest = RefreshTokenDigest.create(

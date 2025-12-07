@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { NotificationChannel } from '@modules/notifications/domain/enums/notification-channel.enum';
 import { NotificationSenderStrategy } from '@modules/notifications/domain/services/notification-sender-strategy.service';
 import { Notification } from '@modules/notifications/domain/aggregates/notification.aggregate';
-import { MailSenderGateway } from '@shared/infra/mail-sender';
+import { MailGateway } from '@shared/application/gateways/mail.gateway';
 import { EmailChannelData } from '@modules/notifications/domain/value-objects/email-channel-data.value-object';
 import * as Mustache from 'mustache';
 
@@ -11,7 +11,7 @@ import * as Mustache from 'mustache';
 export class EmailNotificationSenderStrategy
   implements NotificationSenderStrategy
 {
-  constructor(private readonly mailSenderGateway: MailSenderGateway) {}
+  constructor(private readonly mailGateway: MailGateway) {}
 
   supports(channel: NotificationChannel): boolean {
     return channel === NotificationChannel.EMAIL;
@@ -35,7 +35,7 @@ export class EmailNotificationSenderStrategy
 
     const emailData = emailDataResult.unwrap();
 
-    const result = await this.mailSenderGateway.sendEmail({
+    const result = await this.mailGateway.sendEmail({
       to: [{ email: channelData.to }],
       subject: Mustache.render(emailData.metadata.subject, variables),
       text: Mustache.render(emailData.metadata.body, variables),

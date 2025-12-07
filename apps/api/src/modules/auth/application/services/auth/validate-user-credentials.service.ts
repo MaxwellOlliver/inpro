@@ -2,13 +2,13 @@ import { Err, Ok, Result } from '@inpro/core';
 import { Injectable } from '@nestjs/common';
 import { User } from '@modules/account/domain/aggregates/user.aggregate';
 import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository.interface';
-import { IHashService } from '@shared/security/hash/interfaces/hash.service.interface';
+import { HashGateway } from '@shared/application/gateways/hash.gateway';
 
 @Injectable()
 export class ValidateUserCredentialsService {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly hashService: IHashService,
+    private readonly hashGateway: HashGateway,
   ) {}
 
   async execute(password: string, email: string): Promise<Result<User>> {
@@ -18,7 +18,7 @@ export class ValidateUserCredentialsService {
       return Err(new Error('Invalid credentials'));
     }
 
-    const compareResult = await this.hashService.compareHash(
+    const compareResult = await this.hashGateway.compareHash(
       password,
       user.unwrap().get('password')!,
     );

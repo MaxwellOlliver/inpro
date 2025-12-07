@@ -4,7 +4,7 @@ import { ListUserSessionsQuery } from '@modules/auth/application/queries/session
 import { SessionPresenter } from '../../presenters/session.presenter';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IPrincipal } from 'src/types/principal';
-import { Principal } from '@shared/security/jwt/decorators/principal.decorator';
+import { Principal } from '@shared/infra/security/jwt/decorators/principal.decorator';
 import { RetrieveUserSessionsQueryDTO } from '../../dtos/session/retrieve-user-sessions.dto';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 

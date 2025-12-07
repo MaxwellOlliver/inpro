@@ -4,11 +4,11 @@ import { Err, Ok, Result } from '@inpro/core';
 import { Paginated } from '@shared/utils/query-params';
 import { IListUserSessions } from '@modules/auth/application/interfaces/queries/list-user-sessions.query.interface';
 import { ListUserSessionsQuery } from '@modules/auth/application/queries/session/list-user-sessions.query';
-import { MongooseGateway } from '@shared/infra/db/mongoose.gateway';
+import { MongooseConnectionService } from '@shared/infra/db/mongoose/services/mongoose-connection.service';
 
 @Injectable()
 export class ListUserSessions implements IListUserSessions {
-  constructor(private readonly mongooseGateway: MongooseGateway) {}
+  constructor(private readonly mongoose: MongooseConnectionService) {}
 
   async perform(
     query: ListUserSessionsQuery,
@@ -19,7 +19,7 @@ export class ListUserSessions implements IListUserSessions {
     } = query.dto;
 
     const sessionsResult = await Result.fromPromise(
-      this.mongooseGateway.models.Session.find<SessionModel>({
+      this.mongoose.models.Session.find<SessionModel>({
         userId,
       })
         .sort({ lastRefreshAt: -1 })
@@ -32,7 +32,7 @@ export class ListUserSessions implements IListUserSessions {
     }
 
     const sessions = sessionsResult.unwrap();
-    const total = await this.mongooseGateway.models.Session.countDocuments({
+    const total = await this.mongoose.models.Session.countDocuments({
       userId,
     });
 

@@ -2,9 +2,9 @@ import { SendNotificationCommand } from '@modules/notifications/application/comm
 import { NotificationChannel } from '@modules/notifications/domain/enums/notification-channel.enum';
 import { Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { Public } from '@shared/security/jwt/decorators/public.decorator';
+import { Public } from '@shared/infra/security/jwt/decorators/public.decorator';
 
-// TODO: remove this controller
+// TODO: remove this controller. Created for testing purposes.
 @Controller('notifications')
 export class SendNotificationController {
   constructor(private readonly commandBus: CommandBus) {}

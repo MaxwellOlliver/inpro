@@ -2,7 +2,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Controller, Param, Patch } from '@nestjs/common';
 import { RevokeSessionCommand } from '@modules/auth/application/commands/session/revoke-session.command';
 import { SessionPresenter } from '../../presenters/session.presenter';
-import { Principal } from '@shared/security/jwt/decorators/principal.decorator';
+import { Principal } from '@shared/infra/security/jwt/decorators/principal.decorator';
 import { IPrincipal } from 'src/types/principal';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 

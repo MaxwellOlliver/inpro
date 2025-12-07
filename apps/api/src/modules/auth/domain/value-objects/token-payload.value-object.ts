@@ -1,5 +1,4 @@
 import { Err, Ok, Result, ValueObject } from '@inpro/core';
-import { z } from 'zod';
 
 interface Props {
   sid: string;
@@ -10,14 +9,6 @@ interface Props {
 }
 
 export class TokenPayload extends ValueObject<Props> {
-  static readonly schema = z.object({
-    sid: z.string(),
-    sub: z.string(),
-    email: z.string(),
-    deviceId: z.string(),
-    jti: z.string(),
-  });
-
   private constructor(props: Props) {
     super(props);
   }
@@ -25,14 +16,24 @@ export class TokenPayload extends ValueObject<Props> {
   static create(props: Props): Result<TokenPayload, Error> {
     const isValid = this.isValidProps(props);
 
-    if (isValid.isErr()) {
+    if (!isValid) {
       return Err(new Error('Invalid token payload'));
     }
 
     return Ok(new TokenPayload(props));
   }
 
-  static isValidProps(props: Props): Result<boolean> {
-    return Ok(this.schema.safeParse(props).success);
+  static isValidProps(props: Props): boolean {
+    if (
+      !props.sid ||
+      !props.sub ||
+      !props.email ||
+      !props.deviceId ||
+      !props.jti
+    ) {
+      return false;
+    }
+
+    return true;
   }
 }

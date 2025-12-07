@@ -8,6 +8,7 @@ import { HttpExceptionFilter } from '@shared/nest/filters/http-exception.filter'
 import { patchNestjsSwagger } from '@anatine/zod-nestjs';
 import cookieParser from 'cookie-parser';
 import { ResponseInterceptor } from '@shared/nest/interceptors/response.interceptor';
+import { Request, Response } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -53,6 +54,10 @@ async function bootstrap() {
   app.enableShutdownHooks();
 
   app.use(cookieParser());
+
+  app.getHttpAdapter().get('/coffee', (req: Request, res: Response) => {
+    res.status(418).json({ message: "I'm a teapot" });
+  });
 
   await app.listen(process.env.PORT || 3000);
 }
