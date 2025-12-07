@@ -3,7 +3,7 @@ import { MediaType } from '../enums/media-type.enum';
 
 interface MediaProps {
   id: ID;
-  url: string;
+  key: string;
   type: MediaType;
   size: number;
   purpose?: string;
@@ -33,7 +33,7 @@ export class Media extends Aggregate<MediaProps> {
 
     const media = new Media({
       id: raw.id ?? ID.create().unwrap(),
-      url: raw.url.trim(),
+      key: raw.key.trim(),
       type: raw.type,
       size: raw.size,
       purpose: raw.purpose,
@@ -45,8 +45,8 @@ export class Media extends Aggregate<MediaProps> {
   }
 
   private static validateProps(props: CreateMediaProps): Error | null {
-    if (!props.url) {
-      return new Error('Media url is required');
+    if (!props.key) {
+      return new Error('Media key is required');
     }
 
     if (!Object.values(MediaType).includes(props.type)) {

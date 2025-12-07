@@ -42,7 +42,7 @@ model Profile {
 
 model Media {
   id        String    @id @default(uuid())
-  url       String
+  key       String    @unique
   type      MediaType @default(IMAGE)
   size      Int
   purpose   String?
@@ -50,7 +50,7 @@ model Media {
   updatedAt DateTime  @updatedAt
 
   // No relation with Media because we don't want to add back-relations for every relation with Media
-
+  @@index([key])
   @@map("media")
 }
 
