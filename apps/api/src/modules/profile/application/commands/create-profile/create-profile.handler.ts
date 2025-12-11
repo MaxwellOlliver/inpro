@@ -1,25 +1,22 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CreateProfileCommand } from '../create-profile.command';
-import { IProfileRepository } from '@modules/profile/domain/interfaces/repositories/profile.repository';
-import { CreateProfileOutputDTO } from '@modules/profile/application/ports/in/create-profile.port';
-import { Err, ID, Ok } from '@inpro/core';
+import { CreateProfileCommand } from './create-profile.command';
+import { ProfileRepository } from '@modules/profile/domain/interfaces/repositories/profile.repository';
+import { Err, ID, Ok, Result } from '@inpro/core';
 import { Profile } from '@modules/profile/domain/aggregates/profile.aggregate';
 import { BusinessException } from '@shared/exceptions/business.exception';
 import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository.interface';
 
 @CommandHandler(CreateProfileCommand)
 export class CreateProfileHandler
-  implements ICommandHandler<CreateProfileCommand, CreateProfileOutputDTO>
+  implements ICommandHandler<CreateProfileCommand>
 {
   constructor(
-    private readonly profileRepository: IProfileRepository,
+    private readonly profileRepository: ProfileRepository,
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async execute(
-    command: CreateProfileCommand,
-  ): Promise<CreateProfileOutputDTO> {
-    const userId = ID.create(command.dto.userId).unwrap();
+  async execute(command: CreateProfileCommand): Promise<Result<Profile>> {
+    const userId = ID.create(command.userId).unwrap();
 
     const user = await this.userRepository.findById(userId.value());
 
@@ -44,16 +41,12 @@ export class CreateProfileHandler
     }
 
     const profile = Profile.create({
-      name: command.dto.name,
-      avatarId: command.dto.avatarId
-        ? ID.create(command.dto.avatarId).unwrap()
-        : null,
-      bannerId: command.dto.bannerId
-        ? ID.create(command.dto.bannerId).unwrap()
-        : null,
-      bio: command.dto.bio,
-      location: command.dto.location,
-      userName: command.dto.userName,
+      name: command.name,
+      avatarId: command.avatarId ? ID.create(command.avatarId).unwrap() : null,
+      bannerId: command.bannerId ? ID.create(command.bannerId).unwrap() : null,
+      bio: command.bio,
+      location: command.location,
+      userName: command.userName,
       userId,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -81,6 +74,6 @@ export class CreateProfileHandler
       );
     }
 
-    return Ok({ profile: profile.unwrap() });
+    return Ok(profile.unwrap());
   }
 }

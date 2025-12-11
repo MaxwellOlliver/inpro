@@ -1,13 +1,13 @@
 import { Err, Ok, Result } from '@inpro/core';
 import { Profile } from '@modules/profile/domain/aggregates/profile.aggregate';
-import { IProfileRepository } from '@modules/profile/domain/interfaces/repositories/profile.repository';
+import { ProfileRepository } from '@modules/profile/domain/interfaces/repositories/profile.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { PRISMA_CLIENT } from '@shared/infra/db/prisma/tokens/prisma.tokens';
 import { ProfileMapper } from '../mappers/profile.mapper';
 import { PrismaClient } from '@generated/prisma/client';
 
 @Injectable()
-export class ProfileRepositoryImpl implements IProfileRepository {
+export class PrismaProfileRepository implements ProfileRepository {
   constructor(@Inject(PRISMA_CLIENT) private readonly prisma: PrismaClient) {}
 
   async save(profile: Profile): Promise<Result<Profile>> {
