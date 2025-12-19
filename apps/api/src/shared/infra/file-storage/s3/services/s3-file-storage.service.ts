@@ -28,6 +28,8 @@ export class S3FileStorageService implements FileStorageGateway {
           Body: payload.buffer,
           ContentType: payload.mimetype,
           ContentLength: payload.size,
+          CacheControl:
+            payload.cacheControl ?? 'public, max-age=31536000, immutable',
         }),
       ),
     );
@@ -36,7 +38,7 @@ export class S3FileStorageService implements FileStorageGateway {
       return Err(result.getErr()!);
     }
 
-    const url = `${this.env.get('S3_ENDPOINT')}/${payload.bucket}/${payload.filename}`;
+    const url = `${this.env.get('S3_ENDPOINT')}/${payload.key}`;
 
     return Ok(url);
   }
