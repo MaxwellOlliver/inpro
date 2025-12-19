@@ -6,6 +6,7 @@ export type FileUploadPayload = {
   mimetype: string;
   size: number;
   bucket: string;
+  key: string;
 };
 
 export abstract class FileStorageGateway {

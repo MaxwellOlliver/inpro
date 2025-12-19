@@ -24,7 +24,7 @@ export class S3FileStorageService implements FileStorageGateway {
       this.s3Client.send(
         new PutObjectCommand({
           Bucket: payload.bucket,
-          Key: payload.filename,
+          Key: payload.key,
           Body: payload.buffer,
           ContentType: payload.mimetype,
           ContentLength: payload.size,
