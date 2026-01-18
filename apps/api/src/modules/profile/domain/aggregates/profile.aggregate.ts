@@ -27,6 +27,37 @@ export class Profile extends Aggregate<ProfileProps> {
     super(props);
   }
 
+  update(
+    data: Partial<Pick<ProfileProps, 'name' | 'userName' | 'bio' | 'location'>>,
+  ): Result<Profile> {
+    const nextProps: CreateProfileProps = {
+      id: this.id,
+      userId: this.get('userId'),
+      name: data.name ?? this.get('name'),
+      userName: data.userName ?? this.get('userName'),
+      bio: data.bio ?? this.get('bio'),
+      location: data.location ?? this.get('location'),
+      avatarId: this.get('avatarId'),
+      bannerId: this.get('bannerId'),
+      createdAt: this.get('createdAt'),
+      updatedAt: new Date(),
+    };
+
+    const validateResult = Profile.validateProps(nextProps);
+
+    if (validateResult.isErr()) {
+      return Err(validateResult.unwrapErr());
+    }
+
+    this.set('name', nextProps.name);
+    this.set('userName', nextProps.userName);
+    this.set('bio', nextProps.bio);
+    this.set('location', nextProps.location);
+    this.set('updatedAt', nextProps.updatedAt ?? new Date());
+
+    return Ok(this);
+  }
+
   static create(raw: CreateProfileProps): Result<Profile> {
     const validateResult = Profile.validateProps(raw);
 

@@ -110,9 +110,7 @@ export class Result<T = unknown, E extends Error = Error> {
    * @param promise - The promise to convert.
    * @returns A `Promise` that resolves to a `Result`.
    */
-  static async fromPromise<T, E extends Error>(
-    promise: Promise<T>,
-  ): Promise<Result<T, E>> {
+  static async fromPromise<T, E extends Error>(promise: Promise<T>): Promise<Result<T, E>> {
     try {
       const value = await promise;
       return Ok(value);
@@ -187,9 +185,7 @@ type ResultArray<T extends readonly unknown[], E extends Error> = {
  * @param results - The array of `Result` objects.
  * @returns A `Result` representing the combined result.
  */
-export function Combine<T extends readonly unknown[], E extends Error>(
-  results: ResultArray<T, E>,
-): Result<T, E> {
+export function Combine<T extends readonly unknown[], E extends Error>(results: ResultArray<T, E>): Result<T, E> {
   const values: unknown[] = [];
 
   for (const result of results) {
@@ -208,9 +204,7 @@ export function Combine<T extends readonly unknown[], E extends Error>(
  * @param results - The array of `Result` objects.
  * @returns A `Result` representing the first successful result.
  */
-export function Some<T, E extends Error>(
-  results: ResultArray<T[], E>,
-): Result<T, E> {
+export function Some<T, E extends Error>(results: ResultArray<T[], E>): Result<T, E> {
   for (const result of results) {
     if (result.isOk()) {
       return Ok(result.unwrap());

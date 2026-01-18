@@ -63,4 +63,16 @@ export class PrismaProfileRepository implements ProfileRepository {
 
     return Ok(ProfileMapper.fromModelToDomain(profile));
   }
+
+  async deleteByUserId(userId: string): Promise<Result<void>> {
+    const result = await Result.fromPromise(
+      this.prisma.profile.delete({ where: { userId } }),
+    );
+
+    if (result.isErr()) {
+      return Err(result.getErr()!);
+    }
+
+    return Ok();
+  }
 }

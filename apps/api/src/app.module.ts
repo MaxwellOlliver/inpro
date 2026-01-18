@@ -9,6 +9,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '@shared/infra/security/jwt/guards/jwt-auth.guard';
 import { NotificationModule } from '@modules/notifications/notification.module';
 import { BullModule } from '@nestjs/bullmq';
+import { ProfileModule } from '@modules/profile/profile.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { BullModule } from '@nestjs/bullmq';
     // AccountModule,
     AuthModule,
     NotificationModule,
+    ProfileModule,
   ],
   controllers: [],
   providers: [
