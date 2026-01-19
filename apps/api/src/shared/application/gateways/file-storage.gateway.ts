@@ -7,6 +7,7 @@ export type FileUploadPayload = {
   size: number;
   bucket: string;
   key: string;
+  cacheControl?: string;
 };
 
 export abstract class FileStorageGateway {
