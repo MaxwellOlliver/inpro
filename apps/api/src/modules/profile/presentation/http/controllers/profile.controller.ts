@@ -8,8 +8,11 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreateProfileDTO } from '../dtos/create-profile.dto';
 import { ProfilePresenter } from '../presenters/profile.presenter';
 import { Principal } from '@shared/infra/security/jwt/decorators/principal.decorator';
@@ -18,6 +21,7 @@ import { Public } from '@shared/infra/security/jwt/decorators/public.decorator';
 import { UpdateProfileDTO } from '../dtos/update-profile.dto';
 import { UpdateProfileCommand } from '@modules/profile/application/commands/update-profile/update-profile.command';
 import { DeleteProfileCommand } from '@modules/profile/application/commands/delete-profile/delete-profile.command';
+import { SetProfileMediaCommand } from '@modules/profile/application/commands/set-profile-media/set-profile-media.command';
 import { RetrieveProfileQuery } from '@modules/profile/application/queries/retrieve-profile/retrieve-profile.query';
 import { BusinessException } from '@shared/exceptions/business.exception';
 
@@ -126,5 +130,53 @@ export class ProfileController {
     }
 
     return { deleted: true };
+  }
+
+  @Post('media')
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'avatar', maxCount: 1 },
+      { name: 'banner', maxCount: 1 },
+    ]),
+  )
+  async setProfileMedia(
+    @UploadedFiles()
+    files: { avatar?: Express.Multer.File[]; banner?: Express.Multer.File[] },
+    @Principal() principal: IPrincipal,
+  ) {
+    if (!files.avatar?.[0] || !files.banner?.[0]) {
+      throw new BusinessException(
+        'Avatar and banner files are required',
+        'PROFILE_MEDIA_FILES_REQUIRED',
+        400,
+      );
+    }
+
+    const avatarFile = files.avatar[0];
+    const bannerFile = files.banner[0];
+
+    const result = await this.commandBus.execute(
+      new SetProfileMediaCommand(
+        principal.userId,
+        {
+          buffer: avatarFile.buffer,
+          filename: avatarFile.originalname,
+          mimetype: avatarFile.mimetype,
+          size: avatarFile.size,
+        },
+        {
+          buffer: bannerFile.buffer,
+          filename: bannerFile.originalname,
+          mimetype: bannerFile.mimetype,
+          size: bannerFile.size,
+        },
+      ),
+    );
+
+    if (result.isErr()) {
+      throw result.unwrapErr();
+    }
+
+    return { success: true };
   }
 }

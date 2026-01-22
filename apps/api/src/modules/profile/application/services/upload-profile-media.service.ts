@@ -55,10 +55,6 @@ export class UploadProfileMediaService {
       purpose: kind,
     });
 
-    if (mediaResult.isErr()) {
-      return Err(mediaResult.getErr()!);
-    }
-
     return mediaResult;
   }
 }
