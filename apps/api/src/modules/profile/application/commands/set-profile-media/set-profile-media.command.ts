@@ -10,7 +10,7 @@ export interface ProfileMediaFile {
 
 export class SetProfileMediaCommand extends Command<Result<void>> {
   constructor(
-    public readonly profileId: string,
+    public readonly userId: string,
     public readonly avatarFile: ProfileMediaFile,
     public readonly bannerFile: ProfileMediaFile,
   ) {

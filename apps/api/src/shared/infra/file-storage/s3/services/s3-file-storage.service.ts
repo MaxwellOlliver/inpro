@@ -38,7 +38,7 @@ export class S3FileStorageService implements FileStorageGateway {
       return Err(result.getErr()!);
     }
 
-    const url = `${this.env.get('S3_ENDPOINT')}/${payload.key}`;
+    const url = `${this.env.get('S3_ENDPOINT')}/${payload.bucket}/${payload.key}`;
 
     return Ok(url);
   }

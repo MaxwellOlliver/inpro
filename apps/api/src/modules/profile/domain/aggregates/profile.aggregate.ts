@@ -27,6 +27,12 @@ export class Profile extends Aggregate<ProfileProps> {
     super(props);
   }
 
+  setMedia(avatarId: ID | null, bannerId: ID | null): void {
+    this.set('avatarId', avatarId);
+    this.set('bannerId', bannerId);
+    this.set('updatedAt', new Date());
+  }
+
   update(
     data: Partial<Pick<ProfileProps, 'name' | 'userName' | 'bio' | 'location'>>,
   ): Result<Profile> {

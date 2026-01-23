@@ -3,6 +3,7 @@ import { Combine, Err, Ok, Result } from '@inpro/core';
 import { BusinessException } from '@shared/exceptions/business.exception';
 import { SetProfileMediaCommand } from './set-profile-media.command';
 import { UploadProfileMediaService } from '../../services/upload-profile-media.service';
+import { ProfileRepository } from '@modules/profile/domain/interfaces/repositories/profile.repository';
 
 @CommandHandler(SetProfileMediaCommand)
 export class SetProfileMediaHandler
@@ -10,10 +11,22 @@ export class SetProfileMediaHandler
 {
   constructor(
     private readonly uploadProfileMediaService: UploadProfileMediaService,
+    private readonly profileRepository: ProfileRepository,
   ) {}
 
   async execute(command: SetProfileMediaCommand): Promise<Result<void>> {
-    const { profileId, avatarFile, bannerFile } = command;
+    const { userId, avatarFile, bannerFile } = command;
+
+    const profileResult = await this.profileRepository.findByUserId(userId);
+
+    if (profileResult.isErr()) {
+      return Err(
+        new BusinessException('Profile not found', 'PROFILE_NOT_FOUND', 404),
+      );
+    }
+
+    const profile = profileResult.unwrap();
+    const profileId = profile.id.value();
 
     const avatarResult = await this.uploadProfileMediaService.handle(
       profileId,
@@ -41,6 +54,12 @@ export class SetProfileMediaHandler
         ),
       );
     }
+
+    const [avatar, banner] = mediaResults.unwrap();
+
+    profile.setMedia(avatar.id, banner.id);
+
+    await this.profileRepository.save(profile);
 
     return Ok();
   }

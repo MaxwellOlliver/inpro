@@ -17,8 +17,8 @@ export const S3ClientProvider: Provider = {
       },
       requestHandler: new NodeHttpHandler({
         connectionTimeout: 5000,
-        requestTimeout: 10000,
-        socketTimeout: 10000,
+        requestTimeout: 30000,
+        socketTimeout: 30000,
         throwOnRequestTimeout: true,
       }),
     });

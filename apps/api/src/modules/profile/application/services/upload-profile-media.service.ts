@@ -39,8 +39,8 @@ export class UploadProfileMediaService {
     const mediaKey = await this.fileStorageGateway.upload({
       buffer: mediaBuffer,
       filename: file.filename,
-      mimetype: file.mimetype,
-      size: file.size,
+      mimetype: 'image/webp',
+      size: mediaBuffer.length,
       bucket: 'profile-media',
       key: `profile/${profileId}/${kind}/${mediaId.value()}.webp`,
     });
@@ -54,8 +54,8 @@ export class UploadProfileMediaService {
     const mediaResult = Media.create({
       id: mediaId,
       key: mediaKey.unwrap(),
-      type: file.mimetype as MediaType,
-      size: file.size,
+      type: MediaType.IMAGE,
+      size: mediaBuffer.length,
       purpose: kind,
     });
 
