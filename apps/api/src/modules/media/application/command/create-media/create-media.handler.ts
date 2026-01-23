@@ -11,9 +11,13 @@ export class CreateMediaHandler implements ICommandHandler<CreateMediaCommand> {
   ) {}
 
   async execute(command: CreateMediaCommand): Promise<Result<Media>> {
-    const { file, purpose } = command;
+    const { file, purpose, fileKey } = command;
 
-    const media = await this.mediaUploadHandlerService.handle(file, purpose);
+    const media = await this.mediaUploadHandlerService.handle(
+      file,
+      purpose,
+      fileKey,
+    );
 
     return Ok(media.unwrap());
   }

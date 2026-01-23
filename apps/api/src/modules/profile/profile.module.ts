@@ -10,9 +10,17 @@ import { UpdateProfileHandler } from './application/commands/update-profile/upda
 import { DeleteProfileHandler } from './application/commands/delete-profile/delete-profile.handler';
 import { RetrieveProfileHandler } from './application/queries/retrieve-profile/retrieve-profile.handler';
 import { AccountModule } from '@modules/account/account.module';
+import { SetProfileMediaHandler } from './application/commands/set-profile-media/set-profile-media.handler';
+import { UploadProfileMediaService } from './application/services/upload-profile-media.service';
+import { FileStorageModule } from '@shared/infra/file-storage/file-storage.module';
 
 @Module({
-  imports: [PrismaModule, ImageProcessorModule, AccountModule],
+  imports: [
+    PrismaModule,
+    ImageProcessorModule,
+    AccountModule,
+    FileStorageModule,
+  ],
   providers: [
     ProfileRepositoryProvider,
     ProfileReadStoreProvider,
@@ -20,7 +28,9 @@ import { AccountModule } from '@modules/account/account.module';
     CheckUsernameAvailabilityHandler,
     UpdateProfileHandler,
     DeleteProfileHandler,
+    SetProfileMediaHandler,
     RetrieveProfileHandler,
+    UploadProfileMediaService,
   ],
   exports: [ProfileRepositoryProvider, ProfileReadStoreProvider],
   controllers: [ProfileController],

@@ -35,7 +35,7 @@ export class SetProfileMediaHandler
     if (mediaResults.isErr()) {
       return Err(
         new BusinessException(
-          'Error uploading profile media',
+          mediaResults.unwrapErr().message,
           'PROFILE_MEDIA_UPLOAD_ERROR',
           422,
         ),

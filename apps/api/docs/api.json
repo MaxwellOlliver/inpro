@@ -1,0 +1,458 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/sessions": {
+      "get": {
+        "operationId": "RetrieveUserSessionsController_handler",
+        "parameters": [
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "pattern": "^[a-zA-Z0-9]+:(asc|desc)$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "skip",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 0,
+              "type": "number"
+            }
+          },
+          {
+            "name": "take",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maximum": 50,
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Retrieve user sessions",
+        "tags": [
+          "Sessions"
+        ]
+      }
+    },
+    "/sessions/{id}": {
+      "patch": {
+        "operationId": "RevokeSessionController_handler",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Revoke session",
+        "tags": [
+          "Sessions"
+        ]
+      }
+    },
+    "/auth/sign-in": {
+      "post": {
+        "operationId": "SignInController_handler",
+        "parameters": [
+          {
+            "name": "user-agent",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Session created"
+          },
+          "400": {
+            "description": "This device already has an active session"
+          }
+        },
+        "summary": "Sign in user and create session",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "operationId": "RefreshTokenController_handler",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "refreshToken": []
+          }
+        ],
+        "summary": "Generate new access and refresh tokens",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/sign-out": {
+      "delete": {
+        "operationId": "SignOutController_handler",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "User session removed"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remove user session and revoke refresh token",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/users": {
+      "post": {
+        "operationId": "CreateUserController_createUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Create a new user",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/notifications": {
+      "post": {
+        "operationId": "SendNotificationController_handler",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "SendNotification"
+        ]
+      }
+    },
+    "/profile/check-username-availability": {
+      "get": {
+        "operationId": "ProfileController_checkUsernameAvailability",
+        "parameters": [
+          {
+            "name": "userName",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/profile": {
+      "get": {
+        "operationId": "ProfileController_readProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Profile"
+        ]
+      },
+      "post": {
+        "operationId": "ProfileController_createProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProfileDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Profile"
+        ]
+      },
+      "patch": {
+        "operationId": "ProfileController_updateProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Profile"
+        ]
+      },
+      "delete": {
+        "operationId": "ProfileController_deleteProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/profile/media": {
+      "post": {
+        "operationId": "ProfileController_setProfileMedia",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Profile"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "InPro API",
+    "description": "Here is the API documentation for InPro",
+    "version": "0.0.1",
+    "contact": {
+      "name": "Maxwell Macedo",
+      "url": "https://github.com/MaxwellOlliver",
+      "email": "maxwell.macedo@moondev.com.br"
+    }
+  },
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authentication and authorization endpoints"
+    },
+    {
+      "name": "Sessions",
+      "description": "Session management endpoints"
+    },
+    {
+      "name": "Users",
+      "description": "User management endpoints"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "jwt": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "description": "Enter JWT token"
+      }
+    },
+    "schemas": {
+      "SignInDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string"
+          },
+          "device": {
+            "type": "string",
+            "enum": [
+              "IOS",
+              "ANDROID",
+              "WEB"
+            ]
+          },
+          "deviceId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "device",
+          "deviceId"
+        ]
+      },
+      "CreateUserDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "CreateProfileDTO": {
+        "type": "object",
+        "properties": {
+          "userName": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 20
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "bio": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 255
+          },
+          "location": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          }
+        },
+        "required": [
+          "userName",
+          "name",
+          "bio",
+          "location"
+        ]
+      },
+      "UpdateProfileDTO": {
+        "type": "object",
+        "properties": {
+          "userName": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 20
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "bio": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 255
+          },
+          "location": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50
+          }
+        }
+      }
+    }
+  }
+}

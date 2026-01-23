@@ -34,6 +34,8 @@ export class UploadProfileMediaService {
 
     const mediaId = ID.create().unwrap();
 
+    console.log('start uploading');
+
     const mediaKey = await this.fileStorageGateway.upload({
       buffer: mediaBuffer,
       filename: file.filename,
@@ -42,6 +44,8 @@ export class UploadProfileMediaService {
       bucket: 'profile-media',
       key: `profile/${profileId}/${kind}/${mediaId.value()}.webp`,
     });
+
+    console.log('uploaded');
 
     if (mediaKey.isErr()) {
       return Err(mediaKey.getErr()!);

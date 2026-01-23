@@ -40,7 +40,7 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
 
-  const docsPath = join(__dirname, '..', 'docs');
+  const docsPath = join(process.cwd(), 'docs');
   mkdirSync(docsPath, { recursive: true });
   writeFileSync(join(docsPath, 'api.json'), JSON.stringify(document, null, 2), {
     encoding: 'utf-8',

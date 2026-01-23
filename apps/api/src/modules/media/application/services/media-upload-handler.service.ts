@@ -1,7 +1,4 @@
-import {
-  FileStorageGateway,
-  FileUploadPayload,
-} from '@shared/application/gateways/file-storage.gateway';
+import { FileStorageGateway } from '@shared/application/gateways/file-storage.gateway';
 import { Err, Ok, Result } from '@inpro/core';
 import { MediaRepository } from '@modules/media/domain/repositories/media.repository';
 import { Media } from '@modules/media/domain/aggregates/Media.aggregate';
@@ -18,13 +15,15 @@ export class MediaUploadHandlerService {
   async handle(
     file: Express.Multer.File,
     purpose: string,
+    fileKey: string,
   ): Promise<Result<Media>> {
-    const payload: FileUploadPayload = {
+    const payload = {
       buffer: file.buffer,
       filename: file.filename,
       mimetype: file.mimetype,
       size: file.size,
       bucket: 'media',
+      key: fileKey,
     };
 
     const keyResult = await this.fileStorageGateway.upload(payload);

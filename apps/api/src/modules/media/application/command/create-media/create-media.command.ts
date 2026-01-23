@@ -6,6 +6,7 @@ export class CreateMediaCommand extends Command<Result<Media>> {
   constructor(
     public readonly file: Express.Multer.File,
     public readonly purpose: string,
+    public readonly fileKey: string,
   ) {
     super();
   }
