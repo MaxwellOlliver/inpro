@@ -3,11 +3,14 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Inject, Injectable } from '@nestjs/common';
 import { S3_CLIENT } from '../tokens/s3.tokens';
 import {
   FileStorageGateway,
   FileUploadPayload,
+  PresignedUploadUrlPayload,
+  PresignedUploadUrlResult,
 } from '@shared/application/gateways/file-storage.gateway';
 import { Err, Ok, Result } from '@inpro/core';
 import { EnvService } from '@config/env/env.service';
@@ -58,5 +61,30 @@ export class S3FileStorageService implements FileStorageGateway {
     }
 
     return Ok();
+  }
+
+  async getPresignedUploadUrl(
+    payload: PresignedUploadUrlPayload,
+  ): Promise<Result<PresignedUploadUrlResult, Error>> {
+    const expiresIn = payload.expiresIn ?? 3600;
+
+    const command = new PutObjectCommand({
+      Bucket: payload.bucket,
+      Key: payload.key,
+      ContentType: payload.contentType,
+    });
+
+    const result = await Result.fromPromise(
+      getSignedUrl(this.s3Client, command, { expiresIn }),
+    );
+
+    if (result.isErr()) {
+      return Err(result.getErr()!);
+    }
+
+    const uploadUrl = result.unwrap();
+    const expiresAt = new Date(Date.now() + expiresIn * 1000);
+
+    return Ok({ uploadUrl, expiresAt });
   }
 }

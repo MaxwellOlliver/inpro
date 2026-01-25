@@ -309,6 +309,54 @@
           "Profile"
         ]
       }
+    },
+    "/social/posts": {
+      "post": {
+        "operationId": "PostController_createPost",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePostDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Post"
+        ]
+      }
+    },
+    "/media/upload-url": {
+      "post": {
+        "operationId": "MediaController_requestUploadUrl",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestUploadUrlDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Media"
+        ]
+      }
     }
   },
   "info": {
@@ -452,6 +500,71 @@
             "maxLength": 50
           }
         }
+      },
+      "CreatePostDTO": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "visibility": {
+            "default": "PUBLIC",
+            "type": "string",
+            "enum": [
+              "PUBLIC",
+              "FOLLOWERS_ONLY",
+              "PRIVATE"
+            ]
+          },
+          "mediaIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "maxItems": 4
+          },
+          "parentId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "RequestUploadUrlDTO": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "mimetype": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          },
+          "purpose": {
+            "default": "post",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          }
+        },
+        "required": [
+          "filename",
+          "mimetype",
+          "size"
+        ]
       }
     }
   }

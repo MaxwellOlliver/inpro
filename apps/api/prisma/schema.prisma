@@ -35,22 +35,25 @@ model Profile {
   location  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  posts     Post[]
 
   @@index([userId, userName])
   @@map("profiles")
 }
 
 model Media {
-  id        String    @id @default(uuid())
-  key       String    @unique
-  type      MediaType @default(IMAGE)
+  id        String      @id @default(uuid())
+  key       String      @unique
+  type      MediaType   @default(IMAGE)
+  status    MediaStatus @default(PENDING)
   size      Int
   purpose   String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 
   // No relation with Media because we don't want to add back-relations for every relation with Media
   @@index([key])
+  @@index([status])
   @@map("media")
 }
 
@@ -60,4 +63,50 @@ enum MediaType {
   AUDIO
   DOCUMENT
   OTHER
+}
+
+enum MediaStatus {
+  PENDING
+  PROCESSING
+  READY
+  FAILED
+}
+
+model Post {
+  id         String         @id @default(uuid())
+  profileId  String
+  profile    Profile        @relation(fields: [profileId], references: [id])
+  text       String         @db.VarChar(255)
+  visibility PostVisibility @default(PUBLIC)
+  parentId   String?
+  parent     Post?          @relation("PostReplies", fields: [parentId], references: [id])
+  replies    Post[]         @relation("PostReplies")
+  media      PostMedia[]
+  deletedAt  DateTime?
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@index([profileId])
+  @@index([parentId])
+  @@index([createdAt])
+  @@map("posts")
+}
+
+model PostMedia {
+  id        String   @id @default(uuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  mediaId   String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@unique([postId, mediaId])
+  @@index([postId])
+  @@map("post_media")
+}
+
+enum PostVisibility {
+  PUBLIC
+  FOLLOWERS_ONLY
+  PRIVATE
 }

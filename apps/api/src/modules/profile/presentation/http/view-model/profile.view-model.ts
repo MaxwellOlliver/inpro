@@ -6,4 +6,6 @@ export interface ProfileViewModel {
   location: string;
   avatarId?: string | null;
   bannerId?: string | null;
+  avatarUrl?: string | null;
+  bannerUrl?: string | null;
 }
