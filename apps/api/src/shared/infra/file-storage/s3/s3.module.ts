@@ -12,6 +12,6 @@ import { S3_FILE_STORAGE_SERVICE } from './tokens/s3.tokens';
       useExisting: S3FileStorageService,
     },
   ],
-  exports: [S3FileStorageService],
+  exports: [S3FileStorageService, S3ClientProvider],
 })
 export class S3Module {}

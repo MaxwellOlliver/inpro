@@ -60,7 +60,7 @@ async function bootstrap() {
     res.status(418).json({ message: "I'm a teapot" });
   });
 
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 3000, '0.0.0.0');
 }
 
 void bootstrap();
