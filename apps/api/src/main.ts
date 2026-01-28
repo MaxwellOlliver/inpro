@@ -52,6 +52,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ZodValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new ResponseInterceptor());
+  app.enableCors({ origin: true, credentials: true });
   app.enableShutdownHooks();
 
   app.use(cookieParser());
