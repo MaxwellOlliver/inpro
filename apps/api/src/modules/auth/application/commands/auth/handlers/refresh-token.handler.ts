@@ -5,6 +5,7 @@ import { RefreshTokenOutputDTO } from '@modules/auth/application/ports/in/auth/r
 import { GetRefreshTokenSessionService } from '@modules/auth/application/services/auth/get-refresh-token-session.service';
 import { GenerateTokensService } from '@modules/auth/application/services/auth/generate-tokens.service';
 import { UpdateSessionRefreshTokenService } from '@modules/auth/application/services/auth/update-session-refresh-token.service';
+import { ProfileRepository } from '@modules/profile/domain/interfaces/repositories/profile.repository';
 
 @CommandHandler(RefreshTokenCommand)
 export class RefreshTokenHandler
@@ -14,6 +15,7 @@ export class RefreshTokenHandler
     private readonly getRefreshTokenSessionService: GetRefreshTokenSessionService,
     private readonly generateTokensService: GenerateTokensService,
     private readonly updateSessionRefreshTokenService: UpdateSessionRefreshTokenService,
+    private readonly profileRepository: ProfileRepository,
   ) {}
 
   async execute(command: RefreshTokenCommand): Promise<RefreshTokenOutputDTO> {
@@ -31,9 +33,24 @@ export class RefreshTokenHandler
 
     const { session, user } = result.unwrap();
 
+    const profileResult = await this.profileRepository.findByUserId(
+      user.id.value(),
+    );
+
+    if (profileResult.isErr()) {
+      throw new BusinessException(
+        'Profile not found',
+        'PROFILE_NOT_FOUND',
+        404,
+      );
+    }
+
+    const profile = profileResult.unwrap();
+
     const tokensResult = this.generateTokensService.execute(
       session.id.value(),
       user,
+      profile.id.value(),
       session.get('deviceId'),
     );
 

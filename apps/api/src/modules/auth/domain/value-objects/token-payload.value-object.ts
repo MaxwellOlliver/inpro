@@ -3,6 +3,7 @@ import { Err, Ok, Result, ValueObject } from '@inpro/core';
 interface Props {
   sid: string;
   sub: string;
+  profileId: string;
   email: string;
   deviceId: string;
   jti: string;
@@ -27,6 +28,7 @@ export class TokenPayload extends ValueObject<Props> {
     if (
       !props.sid ||
       !props.sub ||
+      !props.profileId ||
       !props.email ||
       !props.deviceId ||
       !props.jti

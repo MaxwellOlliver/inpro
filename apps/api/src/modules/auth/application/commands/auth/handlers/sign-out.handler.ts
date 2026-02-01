@@ -26,6 +26,7 @@ export class SignOutHandler implements ICommandHandler<SignOutCommand> {
     const tokenPayloadVO = TokenPayload.create({
       sid: originalTokenPayload.sid,
       sub: originalTokenPayload.sub,
+      profileId: originalTokenPayload.profileId,
       email: originalTokenPayload.email,
       deviceId: originalTokenPayload.deviceId,
       jti: originalTokenPayload.jti,

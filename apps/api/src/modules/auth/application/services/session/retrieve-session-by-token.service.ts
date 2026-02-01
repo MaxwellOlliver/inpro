@@ -25,6 +25,7 @@ export class RetrieveSessionByTokenService {
     const decoded = TokenPayload.create({
       sid: originalDecoded.sid,
       sub: originalDecoded.sub,
+      profileId: originalDecoded.profileId,
       email: originalDecoded.email,
       deviceId: originalDecoded.deviceId,
       jti: originalDecoded.jti,

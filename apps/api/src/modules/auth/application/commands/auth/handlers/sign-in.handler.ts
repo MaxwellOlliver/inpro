@@ -5,6 +5,7 @@ import { CreateSessionCommand } from '@modules/auth/application/commands/session
 import { SignInOutputDTO } from '@modules/auth/application/ports/in/auth/sign-in.port';
 import { ValidateUserCredentialsService } from '@modules/auth/application/services/auth/validate-user-credentials.service';
 import { GenerateTokensService } from '@modules/auth/application/services/auth/generate-tokens.service';
+import { ProfileRepository } from '@modules/profile/domain/interfaces/repositories/profile.repository';
 import { BusinessException } from '@shared/exceptions/business.exception';
 
 @CommandHandler(SignInCommand)
@@ -15,10 +16,10 @@ export class SignInHandler
     private readonly commandBus: CommandBus,
     private readonly validateUserCredentialsService: ValidateUserCredentialsService,
     private readonly generateTokensService: GenerateTokensService,
+    private readonly profileRepository: ProfileRepository,
   ) {}
 
   async execute(command: SignInCommand): Promise<SignInOutputDTO> {
-    console.log(command);
     const userResult = await this.validateUserCredentialsService.execute(
       command.dto.password,
       command.dto.email,
@@ -34,11 +35,26 @@ export class SignInHandler
 
     const user = userResult.unwrap();
 
+    const profileResult = await this.profileRepository.findByUserId(
+      user.id.value(),
+    );
+
+    if (profileResult.isErr()) {
+      throw new BusinessException(
+        'Profile not found',
+        'PROFILE_NOT_FOUND',
+        404,
+      );
+    }
+
+    const profile = profileResult.unwrap();
+
     const sessionId = ID.create().unwrap();
 
     const tokensResult = this.generateTokensService.execute(
       sessionId.value(),
       user,
+      profile.id.value(),
       command.dto.deviceId,
     );
 

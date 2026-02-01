@@ -16,26 +16,19 @@ export class GenerateTokensService {
   execute(
     sessionId: string,
     user: User,
+    profileId: string,
     deviceId: string,
   ): Result<{ accessToken: string; refreshToken: string }> {
     const { id, email } = user.toObject();
-    console.log({
-      sub: id,
-      email: email.value,
-      sid: sessionId,
-      deviceId: deviceId,
-      jti: randomUUID(),
-    });
 
     const payload = TokenPayload.create({
       sub: id,
+      profileId,
       email: email.value,
       sid: sessionId,
       deviceId: deviceId,
       jti: randomUUID(),
     }).unwrap();
-
-    console.log(payload.toObject());
 
     const accessToken = this.tokenGateway.sign(payload.toObject(), {
       expiresIn: this.envService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME'),
