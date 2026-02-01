@@ -12,6 +12,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { ProfileModule } from '@modules/profile/profile.module';
 import { SocialModule } from '@modules/social/social.module';
 import { MediaModule } from '@modules/media/media.module';
+import { AccountModule } from '@modules/account/account.module';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { MediaModule } from '@modules/media/media.module';
     EnvModule,
     CqrsModule.forRoot(),
     JwtModule,
-    // AccountModule,
+    AccountModule,
     AuthModule,
     NotificationModule,
     ProfileModule,

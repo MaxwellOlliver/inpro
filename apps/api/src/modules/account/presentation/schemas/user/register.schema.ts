@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const createUserSchema = z.object({
+export const registerSchema = z.object({
   email: z.string().email(),
   password: z
     .string()
@@ -12,4 +12,8 @@ export const createUserSchema = z.object({
           'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character',
       },
     ),
+  userName: z.string().min(3).max(20),
+  name: z.string().min(3).max(50),
+  bio: z.string().min(3).max(255),
+  location: z.string().min(3).max(50),
 });

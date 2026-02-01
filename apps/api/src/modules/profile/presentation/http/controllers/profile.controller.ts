@@ -1,4 +1,3 @@
-import { CreateProfileCommand } from '@modules/profile/application/commands/create-profile/create-profile.command';
 import { CheckUsernameAvailabilityQuery } from '@modules/profile/application/queries/check-username-availability/check-username-availability.query';
 import {
   Body,
@@ -13,7 +12,6 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { CreateProfileDTO } from '../dtos/create-profile.dto';
 import { ProfilePresenter } from '../presenters/profile.presenter';
 import { Principal } from '@shared/infra/security/jwt/decorators/principal.decorator';
 import { IPrincipal } from 'src/types/principal';
@@ -67,32 +65,6 @@ export class ProfileController {
     const presenter = new ProfilePresenter();
 
     return presenter.present(profile.unwrap());
-  }
-
-  @Post()
-  async createProfile(
-    @Body() createProfileDto: CreateProfileDTO,
-    @Principal() principal: IPrincipal,
-  ) {
-    const profile = await this.commandBus.execute(
-      new CreateProfileCommand(
-        principal.userId,
-        createProfileDto.userName,
-        createProfileDto.name,
-        createProfileDto.location,
-        createProfileDto.bio,
-      ),
-    );
-
-    if (profile.isErr()) {
-      throw profile.unwrapErr();
-    }
-
-    const presenter = new ProfilePresenter();
-
-    const profileViewModel = presenter.present(profile.unwrap());
-
-    return profileViewModel;
   }
 
   @Patch()
