@@ -1,5 +1,14 @@
-import { CreatePostCommand } from '@modules/social/application/commands/create-post/create-post.command';
-import { Body, Controller, Post } from '@nestjs/common';
+import { CreatePostCommand } from '@modules/social/application/commands/create-post';
+import { DeletePostCommand } from '@modules/social/application/commands/delete-post';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreatePostDTO } from '../dtos/create-post.dto';
 import { PostPresenter } from '../presenters/post.presenter';
@@ -51,5 +60,20 @@ export class PostController {
     const presenter = new PostPresenter();
 
     return presenter.present(post.unwrap());
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deletePost(
+    @Param('id') id: string,
+    @Principal() principal: IPrincipal,
+  ) {
+    const result = await this.commandBus.execute(
+      new DeletePostCommand(id, principal.userId),
+    );
+
+    if (result.isErr()) {
+      throw result.unwrapErr();
+    }
   }
 }
