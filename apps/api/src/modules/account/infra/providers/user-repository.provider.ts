@@ -1,7 +1,7 @@
-import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository.interface';
-import { UserRepository } from '../repositories/user.repository.impl';
+import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository';
+import { PrismaUserRepository } from '../repositories/prisma-user.repository';
 
 export const UserRepositoryProvider = {
   provide: IUserRepository,
-  useClass: UserRepository,
+  useClass: PrismaUserRepository,
 };

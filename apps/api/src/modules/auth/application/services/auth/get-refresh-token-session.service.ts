@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ISessionRepository } from '@modules/auth/domain/interfaces/repositories/session.repository.interface';
 import { Session } from '@modules/auth/domain/aggregates/session.aggregate';
 import { User } from '@modules/account/domain/aggregates/user.aggregate';
-import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository.interface';
+import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository';
 import { EncryptGateway } from '@shared/application/gateways/encrypt.gateway';
 import { TokenGateway } from '@shared/application/gateways/token.gateway';
 import { TokenPayload } from '@modules/auth/domain/value-objects/token-payload.value-object';

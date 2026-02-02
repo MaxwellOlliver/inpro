@@ -4,7 +4,7 @@ import { PostRepository } from '@modules/social/domain/interfaces/repositories/p
 import { Err, ID, Ok, Result } from '@inpro/core';
 import { Post } from '@modules/social/domain/aggregates/post.aggregate';
 import { BusinessException } from '@shared/exceptions/business.exception';
-import { ProfileRepository } from '@modules/profile/domain/interfaces/repositories/profile.repository';
+import { ProfileRepository } from '@modules/account/domain/interfaces/repositories/profile.repository';
 import { MediaRepository } from '@modules/media/domain/repositories/media.repository';
 
 @CommandHandler(CreatePostCommand)

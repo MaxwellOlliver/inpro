@@ -14,7 +14,7 @@ import { CreatePostDTO } from '../dtos/create-post.dto';
 import { PostPresenter } from '../presenters/post.presenter';
 import { Principal } from '@shared/infra/security/jwt/decorators/principal.decorator';
 import { IPrincipal } from 'src/types/principal';
-import { ProfileRepository } from '@modules/profile/domain/interfaces/repositories/profile.repository';
+import { ProfileRepository } from '@modules/account/domain/interfaces/repositories/profile.repository';
 import { BusinessException } from '@shared/exceptions/business.exception';
 
 @Controller('social/posts')

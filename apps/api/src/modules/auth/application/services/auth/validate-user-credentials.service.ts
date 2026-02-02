@@ -1,7 +1,7 @@
 import { Err, Ok, Result } from '@inpro/core';
 import { Injectable } from '@nestjs/common';
 import { User } from '@modules/account/domain/aggregates/user.aggregate';
-import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository.interface';
+import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository';
 import { HashGateway } from '@shared/application/gateways/hash.gateway';
 
 @Injectable()

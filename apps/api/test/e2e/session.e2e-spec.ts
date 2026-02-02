@@ -14,7 +14,7 @@ import { SignInOutputDTO } from '@modules/auth/application/ports/in/auth/sign-in
 import { ValidateSessionOutputDTO } from '@modules/auth/application/ports/in/auth/validate-session.port';
 import { RefreshTokenOutputDTO } from '@modules/auth/application/ports/in/auth/refresh-token.port';
 import { SignOutInputDTO } from '@modules/auth/application/ports/in/auth/sign-out.port';
-import { UserViewModel } from '@modules/account/presentation/view-model/user.view-model';
+import { UserViewModel } from '@modules/account/presentation/http/view-model/user.view-model';
 import { MongooseGateway } from '@shared/gateways/db/mongoose.gateway';
 import { SessionViewModel } from '@modules/auth/presentation/view-model/session.view-model';
 

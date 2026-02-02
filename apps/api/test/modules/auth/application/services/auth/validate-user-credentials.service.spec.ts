@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository.interface';
+import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository';
 import { IHashService } from '@shared/security/hash/interfaces/hash.service.interface';
 import { Err, Ok } from '@inpro/core';
 import { mock, MockProxy } from 'jest-mock-extended';

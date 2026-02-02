@@ -1,7 +1,7 @@
-import { IRegistrationRepository } from '@modules/account/domain/interfaces/repositories/registration.repository.interface';
-import { RegistrationRepository } from '../repositories/registration.repository.impl';
+import { IRegistrationRepository } from '@modules/account/domain/interfaces/repositories/registration.repository';
+import { PrismaRegistrationRepository } from '../repositories/prisma-registration.repository';
 
 export const RegistrationRepositoryProvider = {
   provide: IRegistrationRepository,
-  useClass: RegistrationRepository,
+  useClass: PrismaRegistrationRepository,
 };

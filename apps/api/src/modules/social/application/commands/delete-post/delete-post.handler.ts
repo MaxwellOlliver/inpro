@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeletePostCommand } from './delete-post.command';
 import { PostRepository } from '@modules/social/domain/interfaces/repositories/post.repository';
-import { ProfileRepository } from '@modules/profile/domain/interfaces/repositories/profile.repository';
+import { ProfileRepository } from '@modules/account/domain/interfaces/repositories/profile.repository';
 import { Err, Ok, Result } from '@inpro/core';
 import { BusinessException } from '@shared/exceptions/business.exception';
 

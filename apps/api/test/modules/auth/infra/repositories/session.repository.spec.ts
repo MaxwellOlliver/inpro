@@ -8,7 +8,7 @@ import { UserFactory } from '@test/factories/fake-user.factory';
 import { SessionRepositoryProvider } from '@modules/auth/infra/nest/providers/session-repository.provider';
 import { UserRepositoryProvider } from '@modules/account/infra/providers/user-repository.provider';
 import { ISessionRepository } from '@modules/auth/domain/interfaces/repositories/session.repository.interface';
-import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository.interface';
+import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository';
 import { MongooseGateway } from '@shared/gateways/db/mongoose.gateway';
 import { sessionSchema } from '@modules/auth/infra/db/schemas/session.schema';
 import { PrismaGateway } from '@shared/gateways/db/prisma.gateway';

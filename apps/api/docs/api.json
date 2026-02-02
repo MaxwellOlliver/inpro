@@ -164,16 +164,16 @@
         ]
       }
     },
-    "/users": {
+    "/register": {
       "post": {
-        "operationId": "CreateUserController_createUser",
+        "operationId": "RegisterController_register",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateUserDTO"
+                "$ref": "#/components/schemas/RegisterDTO"
               }
             }
           }
@@ -183,23 +183,9 @@
             "description": ""
           }
         },
-        "summary": "Create a new user",
+        "summary": "Register a new user with profile",
         "tags": [
-          "Users"
-        ]
-      }
-    },
-    "/notifications": {
-      "post": {
-        "operationId": "SendNotificationController_handler",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "SendNotification"
+          "Registration"
         ]
       }
     },
@@ -232,28 +218,6 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Profile"
-        ]
-      },
-      "post": {
-        "operationId": "ProfileController_createProfile",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateProfileDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
             "description": ""
           }
         },
@@ -310,6 +274,20 @@
         ]
       }
     },
+    "/notifications": {
+      "post": {
+        "operationId": "SendNotificationController_handler",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "SendNotification"
+        ]
+      }
+    },
     "/social/posts": {
       "post": {
         "operationId": "PostController_createPost",
@@ -326,6 +304,29 @@
         },
         "responses": {
           "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Post"
+        ]
+      }
+    },
+    "/social/posts/{id}": {
+      "delete": {
+        "operationId": "PostController_deletePost",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
             "description": ""
           }
         },
@@ -464,7 +465,7 @@
           "deviceId"
         ]
       },
-      "CreateUserDTO": {
+      "RegisterDTO": {
         "type": "object",
         "properties": {
           "email": {
@@ -475,16 +476,7 @@
             "type": "string",
             "minLength": 8,
             "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
-          }
-        },
-        "required": [
-          "email",
-          "password"
-        ]
-      },
-      "CreateProfileDTO": {
-        "type": "object",
-        "properties": {
+          },
           "userName": {
             "type": "string",
             "minLength": 3,
@@ -507,6 +499,8 @@
           }
         },
         "required": [
+          "email",
+          "password",
           "userName",
           "name",
           "bio",

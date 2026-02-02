@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaGateway } from '@shared/gateways/db/prisma.gateway';
-import { UserRepository } from '@modules/account/infra/repositories/user.repository.impl';
+import { PrismaUserRepository as UserRepository } from '@modules/account/infra/repositories/prisma-user.repository';
 import { User } from '@modules/account/domain/aggregates/user.aggregate';
 import { Combine, ID } from '@inpro/core';
 import { Email } from '@modules/account/domain/value-objects/email.value-object';

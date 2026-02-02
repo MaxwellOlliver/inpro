@@ -27,14 +27,12 @@ import { SignOutController } from './presentation/controllers/auth/sign-out.cont
 import { RetrieveUserSessionsController } from './presentation/controllers/sessions/retrieve-user-sessions.controller';
 import { RevokeSessionController } from './presentation/controllers/sessions/revoke-session.controller';
 import { MongooseModule } from '@shared/infra/db/mongoose/mongoose.module';
-import { ProfileModule } from '@modules/profile/profile.module';
 
 @Module({
   imports: [
     HashModule,
     EncryptModule,
     AccountModule,
-    ProfileModule,
     JwtModule,
     EnvModule,
     MongooseModule.register({

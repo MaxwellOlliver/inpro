@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository.interface';
+import { IUserRepository } from '@modules/account/domain/interfaces/repositories/user.repository';
 import { ISessionRepository } from '@modules/auth/domain/interfaces/repositories/session.repository.interface';
 import { Err, ID, Ok } from '@inpro/core';
 import { mock, MockProxy } from 'jest-mock-extended';

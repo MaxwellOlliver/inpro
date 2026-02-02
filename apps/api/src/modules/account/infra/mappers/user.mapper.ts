@@ -1,8 +1,12 @@
 import { User } from '@modules/account/domain/aggregates/user.aggregate';
-import { UserModel } from '../db/models/user.model';
+import { User as PrismaUser } from '@generated/prisma/client';
 import { ID } from '@inpro/core';
 import { Email } from '@modules/account/domain/value-objects/email.value-object';
 import { Combine } from '@inpro/core';
+
+type UserModel = PrismaUser & {
+  password?: string;
+};
 
 export class UserMapper {
   static fromDomainToModel(item: User): UserModel {

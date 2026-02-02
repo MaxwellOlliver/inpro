@@ -5,7 +5,7 @@ import { CreateSessionCommand } from '@modules/auth/application/commands/session
 import { SignInOutputDTO } from '@modules/auth/application/ports/in/auth/sign-in.port';
 import { ValidateUserCredentialsService } from '@modules/auth/application/services/auth/validate-user-credentials.service';
 import { GenerateTokensService } from '@modules/auth/application/services/auth/generate-tokens.service';
-import { ProfileRepository } from '@modules/profile/domain/interfaces/repositories/profile.repository';
+import { ProfileRepository } from '@modules/account/domain/interfaces/repositories/profile.repository';
 import { BusinessException } from '@shared/exceptions/business.exception';
 
 @CommandHandler(SignInCommand)

@@ -5,7 +5,7 @@ import { RefreshTokenOutputDTO } from '@modules/auth/application/ports/in/auth/r
 import { GetRefreshTokenSessionService } from '@modules/auth/application/services/auth/get-refresh-token-session.service';
 import { GenerateTokensService } from '@modules/auth/application/services/auth/generate-tokens.service';
 import { UpdateSessionRefreshTokenService } from '@modules/auth/application/services/auth/update-session-refresh-token.service';
-import { ProfileRepository } from '@modules/profile/domain/interfaces/repositories/profile.repository';
+import { ProfileRepository } from '@modules/account/domain/interfaces/repositories/profile.repository';
 
 @CommandHandler(RefreshTokenCommand)
 export class RefreshTokenHandler
