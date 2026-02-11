@@ -1,0 +1,13 @@
+import { PostVisibility } from '@modules/social/domain/enums/post-visibility.enum';
+
+export interface PostDetailViewModel {
+  id: string;
+  profileId: string;
+  text: string;
+  visibility: PostVisibility;
+  parentId: string | null;
+  mediaIds: string[];
+  commentCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+}

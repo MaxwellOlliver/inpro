@@ -288,6 +288,67 @@
         ]
       }
     },
+    "/social/posts/{id}": {
+      "get": {
+        "operationId": "PostController_getPostById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Post ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post found"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get a post by ID",
+        "tags": [
+          "Posts"
+        ]
+      },
+      "delete": {
+        "operationId": "PostController_deletePost",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Post ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Post deleted"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a post",
+        "tags": [
+          "Posts"
+        ]
+      }
+    },
     "/social/posts": {
       "post": {
         "operationId": "PostController_createPost",
@@ -316,36 +377,6 @@
           }
         ],
         "summary": "Create a new post",
-        "tags": [
-          "Posts"
-        ]
-      }
-    },
-    "/social/posts/{id}": {
-      "delete": {
-        "operationId": "PostController_deletePost",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "Post ID",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Post deleted"
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "summary": "Delete a post",
         "tags": [
           "Posts"
         ]

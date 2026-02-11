@@ -8,6 +8,8 @@ import { CreatePostHandler } from './application/commands/create-post';
 import { DeletePostHandler } from './application/commands/delete-post';
 import { CreateCommentHandler } from './application/commands/create-comment';
 import { CommentCreatedEventHandler } from './application/events/comment-created.handler';
+import { GetPostByIdHandler } from './application/queries/get-post-by-id';
+import { PostReadStoreProvider } from './infra/providers/post-read-store.provider';
 import { AccountModule } from '@modules/account/account.module';
 import { MediaModule } from '@modules/media/media.module';
 
@@ -20,8 +22,14 @@ import { MediaModule } from '@modules/media/media.module';
     DeletePostHandler,
     CreateCommentHandler,
     CommentCreatedEventHandler,
+    PostReadStoreProvider,
+    GetPostByIdHandler,
   ],
-  exports: [PostRepositoryProvider, CommentRepositoryProvider],
+  exports: [
+    PostRepositoryProvider,
+    CommentRepositoryProvider,
+    PostReadStoreProvider,
+  ],
   controllers: [PostController, CommentController],
 })
 export class SocialModule {}
