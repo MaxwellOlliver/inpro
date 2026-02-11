@@ -304,11 +304,20 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Post created"
+          },
+          "404": {
+            "description": "Profile not found for user"
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new post",
         "tags": [
-          "Post"
+          "Posts"
         ]
       }
     },
@@ -320,6 +329,7 @@
             "name": "id",
             "required": true,
             "in": "path",
+            "description": "Post ID",
             "schema": {
               "type": "string"
             }
@@ -327,11 +337,47 @@
         ],
         "responses": {
           "204": {
-            "description": ""
+            "description": "Post deleted"
           }
         },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a post",
         "tags": [
-          "Post"
+          "Posts"
+        ]
+      }
+    },
+    "/social/comments": {
+      "post": {
+        "operationId": "CommentController_createComment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Comment created"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a comment on a post",
+        "tags": [
+          "Comments"
         ]
       }
     },
@@ -563,6 +609,61 @@
           }
         },
         "required": [
+          "text"
+        ]
+      },
+      "CreateCommentDTO": {
+        "type": "object",
+        "properties": {
+          "postId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "mentions": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "mentionedProfileId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "startIndex": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "endIndex": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "surfaceText": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "mentionedProfileId",
+                "startIndex",
+                "endIndex",
+                "surfaceText"
+              ]
+            },
+            "maxItems": 20
+          },
+          "parentCommentId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "postId",
           "text"
         ]
       },

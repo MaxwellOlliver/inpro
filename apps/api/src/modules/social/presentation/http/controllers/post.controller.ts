@@ -10,6 +10,16 @@ import {
   Post,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreatePostDTO } from '../dtos/create-post.dto';
 import { PostPresenter } from '../presenters/post.presenter';
 import { Principal } from '@shared/infra/security/jwt/decorators/principal.decorator';
@@ -17,6 +27,8 @@ import { IPrincipal } from 'src/types/principal';
 import { ProfileRepository } from '@modules/account/domain/interfaces/repositories/profile.repository';
 import { BusinessException } from '@shared/exceptions/business.exception';
 
+@ApiTags('Posts')
+@ApiBearerAuth()
 @Controller('social/posts')
 export class PostController {
   constructor(
@@ -25,6 +37,10 @@ export class PostController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new post' })
+  @ApiBody({ type: CreatePostDTO })
+  @ApiResponse({ status: 201, description: 'Post created' })
+  @ApiNotFoundResponse({ description: 'Profile not found for user' })
   async createPost(
     @Body() createPostDto: CreatePostDTO,
     @Principal() principal: IPrincipal,
@@ -64,6 +80,9 @@ export class PostController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete a post' })
+  @ApiParam({ name: 'id', description: 'Post ID' })
+  @ApiNoContentResponse({ description: 'Post deleted' })
   async deletePost(
     @Param('id') id: string,
     @Principal() principal: IPrincipal,
