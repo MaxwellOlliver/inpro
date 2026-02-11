@@ -44,7 +44,7 @@ export class Comment extends Aggregate<CommentProps> {
     });
 
     if (!raw.id) {
-      comment.apply(new CommentCreatedEvent(comment));
+      comment.apply(new CommentCreatedEvent(comment.toObject()));
     }
 
     return Ok(comment);

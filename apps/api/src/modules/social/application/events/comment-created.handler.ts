@@ -8,7 +8,7 @@ export class CommentCreatedEventHandler
   implements IEventHandler<CommentCreatedEvent>
 {
   async handle(event: CommentCreatedEvent) {
-    const mentions = event.comment.get('mentions');
+    const mentions = event.comment.mentions;
     // TODO: For each mention, create a notification using the notification module
     // The "profile-mentioned" notification template doesn't exist yet.
     // The flow skeleton is in place for when notifications are implemented.
