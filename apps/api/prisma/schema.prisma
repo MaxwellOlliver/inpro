@@ -36,6 +36,7 @@ model Profile {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   posts     Post[]
+  comments  Comment[]
 
   @@index([userId, userName])
   @@map("profiles")
@@ -82,6 +83,7 @@ model Post {
   parent     Post?          @relation("PostReplies", fields: [parentId], references: [id])
   replies    Post[]         @relation("PostReplies")
   media      PostMedia[]
+  comments   Comment[]
   deletedAt  DateTime?
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
@@ -109,4 +111,42 @@ enum PostVisibility {
   PUBLIC
   FOLLOWERS_ONLY
   PRIVATE
+}
+
+model Comment {
+  id              String           @id @default(uuid())
+  profileId       String
+  profile         Profile          @relation(fields: [profileId], references: [id])
+  postId          String
+  post            Post             @relation(fields: [postId], references: [id])
+  parentCommentId String?
+  parentComment   Comment?         @relation("CommentReplies", fields: [parentCommentId], references: [id])
+  replies         Comment[]        @relation("CommentReplies")
+  text            String           @db.VarChar(500)
+  mentions        CommentMention[]
+  deletedAt       DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([postId])
+  @@index([profileId])
+  @@index([parentCommentId])
+  @@index([createdAt])
+  @@map("comments")
+}
+
+model CommentMention {
+  id                 String   @id @default(uuid())
+  commentId          String
+  comment            Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  mentionedProfileId String
+  startIndex         Int
+  endIndex           Int
+  surfaceText        String   @db.VarChar(100)
+  createdAt          DateTime @default(now())
+
+  @@index([commentId])
+  @@index([mentionedProfileId])
+  @@map("comment_mentions")
+  @@unique([commentId, mentionedProfileId])
 }
