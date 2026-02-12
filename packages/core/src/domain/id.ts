@@ -1,4 +1,5 @@
 import { Result } from '../core';
+import { v7 as uuidv7 } from 'uuid';
 
 /**
  * Represents a unique identifier (UUID) for domain entities or aggregates.
@@ -23,7 +24,7 @@ export class ID {
       this._value = value;
     } else {
       this._isNew = true;
-      this._value = crypto.randomUUID();
+      this._value = uuidv7();
     }
   }
 
