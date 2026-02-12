@@ -349,6 +349,58 @@
         ]
       }
     },
+    "/social/posts/{id}/comments": {
+      "get": {
+        "operationId": "PostController_listPostComments",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Post ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "Cursor for pagination (comment ID)",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "take",
+            "required": false,
+            "in": "query",
+            "description": "Number of comments to return (1-50, default 10)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 10,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comments list"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List comments for a post",
+        "tags": [
+          "Posts"
+        ]
+      }
+    },
     "/social/posts": {
       "post": {
         "operationId": "PostController_createPost",

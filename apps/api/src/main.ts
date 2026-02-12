@@ -7,7 +7,6 @@ import { DocumentBuilder } from '@nestjs/swagger';
 import { HttpExceptionFilter } from '@shared/nest/filters/http-exception.filter';
 import { patchNestjsSwagger, ZodValidationPipe } from '@anatine/zod-nestjs';
 import cookieParser from 'cookie-parser';
-import { ResponseInterceptor } from '@shared/nest/interceptors/response.interceptor';
 import { Request, Response } from 'express';
 
 async function bootstrap() {
@@ -51,7 +50,6 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ZodValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalInterceptors(new ResponseInterceptor());
   app.enableCors({ origin: true, credentials: true });
   app.enableShutdownHooks();
 
