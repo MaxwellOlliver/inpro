@@ -11,6 +11,8 @@ export class PostDetailPresenter {
       parentId: readModel.parentId,
       mediaIds: readModel.mediaIds,
       commentCount: readModel.commentCount,
+      likeCount: readModel.likeCount,
+      isLikedByMe: readModel.isLikedByMe,
       createdAt: readModel.createdAt,
       updatedAt: readModel.updatedAt,
     };

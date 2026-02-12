@@ -13,6 +13,8 @@ export interface CommentListItemReadModel {
   text: string;
   mentions: CommentListItemMention[];
   replyCount: number;
+  likeCount: number;
+  isLikedByMe: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -9,13 +9,21 @@ import { PRISMA_CLIENT } from '@shared/infra/db/prisma/tokens/prisma.tokens';
 export class PrismaPostReadStore implements PostReadStore {
   constructor(@Inject(PRISMA_CLIENT) private readonly prisma: PrismaClient) {}
 
-  async findById(id: string): Promise<Result<PostDetailReadModel>> {
+  async findById(
+    id: string,
+    requestorProfileId: string,
+  ): Promise<Result<PostDetailReadModel>> {
     const result = await Result.fromPromise(
       this.prisma.post.findUnique({
         where: { id, deletedAt: null },
         include: {
           media: { select: { mediaId: true }, orderBy: { order: 'asc' } },
-          _count: { select: { comments: true } },
+          _count: { select: { comments: true, likes: true } },
+          likes: {
+            where: { profileId: requestorProfileId },
+            select: { id: true },
+            take: 1,
+          },
         },
       }),
     );
@@ -38,6 +46,8 @@ export class PrismaPostReadStore implements PostReadStore {
       parentId: post.parentId,
       mediaIds: post.media.map((m) => m.mediaId),
       commentCount: post._count.comments,
+      likeCount: post._count.likes,
+      isLikedByMe: post.likes.length > 0,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
     });

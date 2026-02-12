@@ -8,6 +8,7 @@ export class ListPostCommentsQuery extends Query<
 > {
   constructor(
     public readonly postId: string,
+    public readonly requestorProfileId: string,
     public readonly cursor?: string,
     public readonly take: number = 10,
   ) {

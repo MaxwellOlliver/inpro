@@ -8,6 +8,8 @@ export interface CommentListItemViewModel {
   text: string;
   mentions: MentionViewModel[];
   replyCount: number;
+  likeCount: number;
+  isLikedByMe: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

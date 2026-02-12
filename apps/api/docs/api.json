@@ -401,6 +401,36 @@
         ]
       }
     },
+    "/social/posts/{id}/like": {
+      "post": {
+        "operationId": "PostController_togglePostLike",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Post ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Like toggled"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Toggle like on a post",
+        "tags": [
+          "Posts"
+        ]
+      }
+    },
     "/social/posts": {
       "post": {
         "operationId": "PostController_createPost",
@@ -459,6 +489,36 @@
           }
         ],
         "summary": "Create a comment on a post",
+        "tags": [
+          "Comments"
+        ]
+      }
+    },
+    "/social/comments/{id}/like": {
+      "post": {
+        "operationId": "CommentController_toggleCommentLike",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Comment ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Like toggled"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Toggle like on a comment",
         "tags": [
           "Comments"
         ]

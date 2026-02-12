@@ -8,6 +8,8 @@ export interface PostDetailReadModel {
   parentId: string | null;
   mediaIds: string[];
   commentCount: number;
+  likeCount: number;
+  isLikedByMe: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

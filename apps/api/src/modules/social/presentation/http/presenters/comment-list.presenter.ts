@@ -20,6 +20,8 @@ export class CommentListPresenter {
           surfaceText: m.surfaceText,
         })),
         replyCount: comment.replyCount,
+        likeCount: comment.likeCount,
+        isLikedByMe: comment.isLikedByMe,
         createdAt: comment.createdAt,
         updatedAt: comment.updatedAt,
       })),

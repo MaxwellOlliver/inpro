@@ -10,7 +10,10 @@ export class GetPostByIdHandler implements IQueryHandler<GetPostByIdQuery> {
   constructor(private readonly postReadStore: PostReadStore) {}
 
   async execute(query: GetPostByIdQuery): Promise<Result<PostDetailReadModel>> {
-    const result = await this.postReadStore.findById(query.postId);
+    const result = await this.postReadStore.findById(
+      query.postId,
+      query.requestorProfileId,
+    );
 
     if (result.isErr()) {
       return Err(

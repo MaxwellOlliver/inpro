@@ -9,5 +9,6 @@ export abstract class CommentReadStore {
   abstract findByPostId(
     postId: string,
     pagination: CursorPagination,
+    requestorProfileId: string,
   ): Promise<Result<CursorPaginated<CommentListItemReadModel>>>;
 }

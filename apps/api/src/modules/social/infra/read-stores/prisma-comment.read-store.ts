@@ -15,6 +15,7 @@ export class PrismaCommentReadStore implements CommentReadStore {
   async findByPostId(
     postId: string,
     pagination: CursorPagination,
+    requestorProfileId: string,
   ): Promise<Result<CursorPaginated<CommentListItemReadModel>>> {
     const { cursor, take } = pagination;
 
@@ -37,7 +38,12 @@ export class PrismaCommentReadStore implements CommentReadStore {
               surfaceText: true,
             },
           },
-          _count: { select: { replies: true } },
+          _count: { select: { replies: true, likes: true } },
+          likes: {
+            where: { profileId: requestorProfileId },
+            select: { id: true },
+            take: 1,
+          },
         },
       }),
     );
@@ -61,6 +67,8 @@ export class PrismaCommentReadStore implements CommentReadStore {
         surfaceText: m.surfaceText,
       })),
       replyCount: comment._count.replies,
+      likeCount: comment._count.likes,
+      isLikedByMe: comment.likes.length > 0,
       createdAt: comment.createdAt,
       updatedAt: comment.updatedAt,
     }));

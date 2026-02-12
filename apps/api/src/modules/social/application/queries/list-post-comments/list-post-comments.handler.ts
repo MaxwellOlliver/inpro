@@ -15,10 +15,11 @@ export class ListPostCommentsHandler
   async execute(
     query: ListPostCommentsQuery,
   ): Promise<Result<CursorPaginated<CommentListItemReadModel>>> {
-    const result = await this.commentReadStore.findByPostId(query.postId, {
-      cursor: query.cursor,
-      take: query.take,
-    });
+    const result = await this.commentReadStore.findByPostId(
+      query.postId,
+      { cursor: query.cursor, take: query.take },
+      query.requestorProfileId,
+    );
 
     if (result.isErr()) {
       return Err(

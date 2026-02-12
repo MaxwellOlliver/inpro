@@ -1,5 +1,6 @@
 import { CreatePostCommand } from '@modules/social/application/commands/create-post';
 import { DeletePostCommand } from '@modules/social/application/commands/delete-post';
+import { TogglePostLikeCommand } from '@modules/social/application/commands/toggle-post-like';
 import { GetPostByIdQuery } from '@modules/social/application/queries/get-post-by-id';
 import { ListPostCommentsQuery } from '@modules/social/application/queries/list-post-comments';
 import {
@@ -35,6 +36,7 @@ import { Principal } from '@shared/infra/security/jwt/decorators/principal.decor
 import { IPrincipal } from 'src/types/principal';
 import { ProfileRepository } from '@modules/account/domain/interfaces/repositories/profile.repository';
 import { BusinessException } from '@shared/exceptions/business.exception';
+import { LikeToggleViewModel } from '../view-model/like-toggle.view-model';
 
 @ApiTags('Posts')
 @ApiBearerAuth()
@@ -51,8 +53,13 @@ export class PostController {
   @ApiParam({ name: 'id', description: 'Post ID' })
   @ApiOkResponse({ description: 'Post found' })
   @ApiNotFoundResponse({ description: 'Post not found' })
-  async getPostById(@Param('id') id: string) {
-    const result = await this.queryBus.execute(new GetPostByIdQuery(id));
+  async getPostById(
+    @Param('id') id: string,
+    @Principal() principal: IPrincipal,
+  ) {
+    const result = await this.queryBus.execute(
+      new GetPostByIdQuery(id, principal.profileId),
+    );
 
     if (result.isErr()) {
       throw result.unwrapErr();
@@ -80,9 +87,15 @@ export class PostController {
   async listPostComments(
     @Param('id') id: string,
     @Query() query: ListPostCommentsDTO,
+    @Principal() principal: IPrincipal,
   ) {
     const result = await this.queryBus.execute(
-      new ListPostCommentsQuery(id, query.cursor, query.take),
+      new ListPostCommentsQuery(
+        id,
+        principal.profileId,
+        query.cursor,
+        query.take,
+      ),
     );
 
     if (result.isErr()) {
@@ -92,6 +105,26 @@ export class PostController {
     const presenter = new CommentListPresenter();
 
     return presenter.present(result.unwrap());
+  }
+
+  @Post(':id/like')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Toggle like on a post' })
+  @ApiParam({ name: 'id', description: 'Post ID' })
+  @ApiOkResponse({ description: 'Like toggled' })
+  async togglePostLike(
+    @Param('id') id: string,
+    @Principal() principal: IPrincipal,
+  ): Promise<LikeToggleViewModel> {
+    const result = await this.commandBus.execute(
+      new TogglePostLikeCommand(principal.profileId, id),
+    );
+
+    if (result.isErr()) {
+      throw result.unwrapErr();
+    }
+
+    return result.unwrap();
   }
 
   @Post()

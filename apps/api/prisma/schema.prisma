@@ -84,6 +84,7 @@ model Post {
   replies    Post[]         @relation("PostReplies")
   media      PostMedia[]
   comments   Comment[]
+  likes      PostLike[]
   deletedAt  DateTime?
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
@@ -124,6 +125,7 @@ model Comment {
   replies         Comment[]        @relation("CommentReplies")
   text            String           @db.VarChar(500)
   mentions        CommentMention[]
+  likes           CommentLike[]
   deletedAt       DateTime?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
@@ -149,4 +151,30 @@ model CommentMention {
   @@index([mentionedProfileId])
   @@map("comment_mentions")
   @@unique([commentId, mentionedProfileId])
+}
+
+model PostLike {
+  id        String   @id @default(uuid())
+  profileId String
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([profileId, postId])
+  @@index([postId])
+  @@index([profileId])
+  @@map("post_likes")
+}
+
+model CommentLike {
+  id        String   @id @default(uuid())
+  profileId String
+  commentId String
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([profileId, commentId])
+  @@index([commentId])
+  @@index([profileId])
+  @@map("comment_likes")
 }
