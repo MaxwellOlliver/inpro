@@ -1,8 +1,10 @@
 import { CreateCommentCommand } from '@modules/social/application/commands/create-comment';
+import { DeleteCommentCommand } from '@modules/social/application/commands/delete-comment';
 import { ToggleCommentLikeCommand } from '@modules/social/application/commands/toggle-comment-like';
 import {
   Body,
   Controller,
+  Delete,
   HttpCode,
   HttpStatus,
   Param,
@@ -12,6 +14,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
@@ -55,6 +58,24 @@ export class CommentController {
     const presenter = new CommentPresenter();
 
     return presenter.present(result.unwrap());
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete a comment' })
+  @ApiParam({ name: 'id', description: 'Comment ID' })
+  @ApiNoContentResponse({ description: 'Comment deleted' })
+  async deleteComment(
+    @Param('id') id: string,
+    @Principal() principal: IPrincipal,
+  ) {
+    const result = await this.commandBus.execute(
+      new DeleteCommentCommand(id, principal.profileId),
+    );
+
+    if (result.isErr()) {
+      throw result.unwrapErr();
+    }
   }
 
   @Post(':id/like')

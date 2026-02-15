@@ -50,6 +50,11 @@ export class Comment extends Aggregate<CommentProps> {
     return Ok(comment);
   }
 
+  softDelete(): void {
+    this.set('deletedAt', new Date());
+    this.set('updatedAt', new Date());
+  }
+
   static validateProps(props: CreateCommentProps): Result<void> {
     if (!props.profileId) {
       return Err(new Error('Profile ID is required'));

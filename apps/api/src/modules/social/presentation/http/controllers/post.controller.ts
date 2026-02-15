@@ -3,6 +3,7 @@ import { DeletePostCommand } from '@modules/social/application/commands/delete-p
 import { TogglePostLikeCommand } from '@modules/social/application/commands/toggle-post-like';
 import { GetPostByIdQuery } from '@modules/social/application/queries/get-post-by-id';
 import { ListPostCommentsQuery } from '@modules/social/application/queries/list-post-comments';
+import { ListPostsQuery } from '@modules/social/application/queries/list-posts';
 import {
   Body,
   Controller,
@@ -29,8 +30,10 @@ import {
 } from '@nestjs/swagger';
 import { CreatePostDTO } from '../dtos/create-post.dto';
 import { ListPostCommentsDTO } from '../dtos/list-post-comments.dto';
+import { ListPostsDTO } from '../dtos/list-posts.dto';
 import { PostPresenter } from '../presenters/post.presenter';
 import { PostDetailPresenter } from '../presenters/post-detail.presenter';
+import { PostListPresenter } from '../presenters/post-list.presenter';
 import { CommentListPresenter } from '../presenters/comment-list.presenter';
 import { Principal } from '@shared/infra/security/jwt/decorators/principal.decorator';
 import { IPrincipal } from 'src/types/principal';
@@ -47,6 +50,36 @@ export class PostController {
     private readonly queryBus: QueryBus,
     private readonly profileRepository: ProfileRepository,
   ) {}
+
+  @Get()
+  @ApiOperation({ summary: 'List posts (most recent first)' })
+  @ApiQuery({
+    name: 'cursor',
+    required: false,
+    description: 'Cursor for pagination (post ID)',
+  })
+  @ApiQuery({
+    name: 'take',
+    required: false,
+    description: 'Number of posts to return (1-50, default 10)',
+  })
+  @ApiOkResponse({ description: 'Posts list' })
+  async listPosts(
+    @Query() query: ListPostsDTO,
+    @Principal() principal: IPrincipal,
+  ) {
+    const result = await this.queryBus.execute(
+      new ListPostsQuery(principal.profileId, query.cursor, query.take),
+    );
+
+    if (result.isErr()) {
+      throw result.unwrapErr();
+    }
+
+    const presenter = new PostListPresenter();
+
+    return presenter.present(result.unwrap());
+  }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a post by ID' })
