@@ -288,6 +288,80 @@
         ]
       }
     },
+    "/social/posts": {
+      "get": {
+        "operationId": "PostController_listPosts",
+        "parameters": [
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "Cursor for pagination (post ID)",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "take",
+            "required": false,
+            "in": "query",
+            "description": "Number of posts to return (1-50, default 10)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 10,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Posts list"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List posts (most recent first)",
+        "tags": [
+          "Posts"
+        ]
+      },
+      "post": {
+        "operationId": "PostController_createPost",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePostDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Post created"
+          },
+          "404": {
+            "description": "Profile not found for user"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new post",
+        "tags": [
+          "Posts"
+        ]
+      }
+    },
     "/social/posts/{id}": {
       "get": {
         "operationId": "PostController_getPostById",
@@ -431,39 +505,6 @@
         ]
       }
     },
-    "/social/posts": {
-      "post": {
-        "operationId": "PostController_createPost",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreatePostDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Post created"
-          },
-          "404": {
-            "description": "Profile not found for user"
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "summary": "Create a new post",
-        "tags": [
-          "Posts"
-        ]
-      }
-    },
     "/social/comments": {
       "post": {
         "operationId": "CommentController_createComment",
@@ -489,6 +530,36 @@
           }
         ],
         "summary": "Create a comment on a post",
+        "tags": [
+          "Comments"
+        ]
+      }
+    },
+    "/social/comments/{id}": {
+      "delete": {
+        "operationId": "CommentController_deleteComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Comment ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Comment deleted"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a comment",
         "tags": [
           "Comments"
         ]
@@ -521,6 +592,57 @@
         "summary": "Toggle like on a comment",
         "tags": [
           "Comments"
+        ]
+      }
+    },
+    "/social/profiles/{profileId}/activity": {
+      "get": {
+        "operationId": "ActivityController_listActivity",
+        "parameters": [
+          {
+            "name": "profileId",
+            "required": true,
+            "in": "path",
+            "description": "Profile ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "Cursor for pagination",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "take",
+            "required": false,
+            "in": "query",
+            "description": "Number of items to return (1-50, default 10)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 10,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Activity list"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List activity for a profile (most recent first)",
+        "tags": [
+          "Activity"
         ]
       }
     },

@@ -14,11 +14,14 @@ import { CommentCreatedEventHandler } from './application/events/comment-created
 import { GetPostByIdHandler } from './application/queries/get-post-by-id';
 import { ListPostCommentsHandler } from './application/queries/list-post-comments';
 import { ListPostsHandler } from './application/queries/list-posts';
+import { ListActivityHandler } from './application/queries/list-activity';
 import { PostReadStoreProvider } from './infra/providers/post-read-store.provider';
 import { CommentReadStoreProvider } from './infra/providers/comment-read-store.provider';
 import { LikeStoreProvider } from './infra/providers/like-store.provider';
+import { ActivityReadStoreProvider } from './infra/providers/activity-read-store.provider';
 import { AccountModule } from '@modules/account/account.module';
 import { MediaModule } from '@modules/media/media.module';
+import { ActivityController } from './presentation/http/controllers/activity.controller';
 
 @Module({
   imports: [PrismaModule, AccountModule, MediaModule],
@@ -35,9 +38,11 @@ import { MediaModule } from '@modules/media/media.module';
     PostReadStoreProvider,
     CommentReadStoreProvider,
     LikeStoreProvider,
+    ActivityReadStoreProvider,
     GetPostByIdHandler,
     ListPostCommentsHandler,
     ListPostsHandler,
+    ListActivityHandler,
   ],
   exports: [
     PostRepositoryProvider,
@@ -46,6 +51,6 @@ import { MediaModule } from '@modules/media/media.module';
     CommentReadStoreProvider,
     LikeStoreProvider,
   ],
-  controllers: [PostController, CommentController],
+  controllers: [PostController, CommentController, ActivityController],
 })
 export class SocialModule {}
