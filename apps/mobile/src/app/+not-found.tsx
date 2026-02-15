@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, Stack } from 'expo-router';
-import { Text } from '@/components/ui/text';
-import { Center } from '@/components/ui/center';
+import { Text } from '@/src/components/ui/text';
+import { Center } from '@/src/components/ui/center';
 
 export default function NotFoundScreen() {
   return (

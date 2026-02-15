@@ -9,11 +9,10 @@ import {
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
-import { useColorScheme } from '@/components/useColorScheme';
 import { Slot, usePathname } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { Fab, FabIcon } from '@/components/ui/fab';
 import { MoonIcon, SunIcon } from '@/components/ui/icon';
+import { QueryProvider } from '@/providers/query-provider';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -47,21 +46,23 @@ function RootLayoutNav() {
   const [colorMode, setColorMode] = useState<'light' | 'dark'>('light');
 
   return (
-    <GluestackUIProvider mode={colorMode}>
-      <ThemeProvider value={colorMode === 'dark' ? DarkTheme : DefaultTheme}>
-        <Slot />
-        {pathname === '/' && (
-          <Fab
-            onPress={() =>
-              setColorMode(colorMode === 'dark' ? 'light' : 'dark')
-            }
-            className="m-6"
-            size="lg"
-          >
-            <FabIcon as={colorMode === 'dark' ? MoonIcon : SunIcon} />
-          </Fab>
-        )}
-      </ThemeProvider>
-    </GluestackUIProvider>
+    <QueryProvider>
+      <GluestackUIProvider mode={colorMode}>
+        <ThemeProvider value={colorMode === 'dark' ? DarkTheme : DefaultTheme}>
+          <Slot />
+          {pathname === '/' && (
+            <Fab
+              onPress={() =>
+                setColorMode(colorMode === 'dark' ? 'light' : 'dark')
+              }
+              className="m-6"
+              size="lg"
+            >
+              <FabIcon as={colorMode === 'dark' ? MoonIcon : SunIcon} />
+            </Fab>
+          )}
+        </ThemeProvider>
+      </GluestackUIProvider>
+    </QueryProvider>
   );
 }
