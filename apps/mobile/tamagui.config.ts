@@ -7,6 +7,10 @@ export const config = createTamagui({
     ...defaultConfig.media,
     // add your own media queries here, if wanted
   },
+  settings: {
+    ...defaultConfig.settings,
+    onlyAllowShorthands: false,
+  },
 });
 
 type OurConfig = typeof config;
