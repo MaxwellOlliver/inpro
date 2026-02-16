@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, H2, Input, Paragraph, YStack } from "tamagui";
+import { Pressable, Text, TextInput, View } from "react-native";
 
 interface StepCredentialsProps {
   initialData: { email: string; password: string };
@@ -17,14 +17,17 @@ export function StepCredentials({ initialData, onNext }: StepCredentialsProps) {
     password === confirmPassword;
 
   return (
-    <YStack flex={1} justifyContent="center" padding="$6" gap="$4">
-      <H2 textAlign="center">Create Account</H2>
-      <Paragraph textAlign="center" color="$gray10">
-        Step 1 of 3 — Your credentials
-      </Paragraph>
+    <View className="flex-1 justify-center px-6">
+      <Text className="text-center text-3xl font-bold text-black">
+        Create Account
+      </Text>
+      <Text className="mt-1 text-center text-base text-neutral-500">
+        Step 1 of 3 - Your credentials
+      </Text>
 
-      <YStack gap="$3" marginTop="$4">
-        <Input
+      <View className="mt-4 gap-3">
+        <TextInput
+          className="rounded-lg border border-neutral-300 bg-white px-4 py-3 text-base"
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
@@ -32,41 +35,43 @@ export function StepCredentials({ initialData, onNext }: StepCredentialsProps) {
           keyboardType="email-address"
           autoComplete="email"
         />
-        <Input
+        <TextInput
+          className="rounded-lg border border-neutral-300 bg-white px-4 py-3 text-base"
           placeholder="Password (min 8 characters)"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
           autoComplete="new-password"
         />
-        <Input
+        <TextInput
+          className="rounded-lg border border-neutral-300 bg-white px-4 py-3 text-base"
           placeholder="Confirm Password"
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           secureTextEntry
           autoComplete="new-password"
         />
-      </YStack>
+      </View>
 
       {password.length > 0 && password.length < 8 && (
-        <Paragraph color="$red10" fontSize="$2">
+        <Text className="mt-2 text-sm text-red-500">
           Password must be at least 8 characters
-        </Paragraph>
-      )}
-      {confirmPassword.length > 0 && password !== confirmPassword && (
-        <Paragraph color="$red10" fontSize="$2">
-          Passwords do not match
-        </Paragraph>
+        </Text>
       )}
 
-      <Button
-        theme="accent"
+      {confirmPassword.length > 0 && password !== confirmPassword && (
+        <Text className="mt-1 text-sm text-red-500">Passwords do not match</Text>
+      )}
+
+      <Pressable
         onPress={() => onNext({ email: email.trim(), password })}
         disabled={!isValid}
-        marginTop="$2"
+        className={`mt-4 items-center rounded-lg bg-blue-600 px-4 py-3 ${
+          !isValid ? "opacity-60" : ""
+        }`}
       >
-        Next
-      </Button>
-    </YStack>
+        <Text className="font-semibold text-white">Next</Text>
+      </Pressable>
+    </View>
   );
 }

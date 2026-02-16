@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Button, H2, Input, Paragraph, Spinner, TextArea, XStack, YStack } from "tamagui";
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 interface StepBioProps {
   initialData: { bio: string; location: string };
@@ -20,45 +26,60 @@ export function StepBio({
   const [location, setLocation] = useState(initialData.location);
 
   return (
-    <YStack flex={1} justifyContent="center" padding="$6" gap="$4">
-      <H2 textAlign="center">Almost Done</H2>
-      <Paragraph textAlign="center" color="$gray10">
-        Step 3 of 3 — Bio & location (optional)
-      </Paragraph>
+    <View className="flex-1 justify-center px-6">
+      <Text className="text-center text-3xl font-bold text-black">Almost Done</Text>
+      <Text className="mt-1 text-center text-base text-neutral-500">
+        Step 3 of 3 - Bio and location (optional)
+      </Text>
 
-      <YStack gap="$3" marginTop="$4">
-        <TextArea
+      <View className="mt-4 gap-3">
+        <TextInput
+          className="min-h-24 rounded-lg border border-neutral-300 bg-white px-4 py-3 text-base"
           placeholder="Tell us about yourself..."
           value={bio}
           onChangeText={setBio}
+          multiline
           numberOfLines={4}
+          textAlignVertical="top"
         />
-        <Input
+        <TextInput
+          className="rounded-lg border border-neutral-300 bg-white px-4 py-3 text-base"
           placeholder="Location"
           value={location}
           onChangeText={setLocation}
         />
-      </YStack>
+      </View>
 
       {error && (
-        <Paragraph color="$red10" textAlign="center">
+        <Text className="mt-2 text-center text-sm text-red-500">
           {error.message || "Registration failed. Please try again."}
-        </Paragraph>
+        </Text>
       )}
 
-      <XStack gap="$3" marginTop="$2">
-        <Button flex={1} onPress={onBack} disabled={isPending}>
-          Back
-        </Button>
-        <Button
-          flex={1}
-          theme="accent"
+      <View className="mt-4 flex-row gap-3">
+        <Pressable
+          onPress={onBack}
+          disabled={isPending}
+          className={`flex-1 items-center rounded-lg border border-neutral-300 bg-white px-4 py-3 ${
+            isPending ? "opacity-60" : ""
+          }`}
+        >
+          <Text className="font-semibold text-neutral-800">Back</Text>
+        </Pressable>
+        <Pressable
           onPress={() => onSubmit({ bio: bio.trim(), location: location.trim() })}
           disabled={isPending}
+          className={`flex-1 items-center rounded-lg bg-blue-600 px-4 py-3 ${
+            isPending ? "opacity-60" : ""
+          }`}
         >
-          {isPending ? <Spinner /> : "Create Account"}
-        </Button>
-      </XStack>
-    </YStack>
+          {isPending ? (
+            <ActivityIndicator color="#ffffff" />
+          ) : (
+            <Text className="font-semibold text-white">Create Account</Text>
+          )}
+        </Pressable>
+      </View>
+    </View>
   );
 }
