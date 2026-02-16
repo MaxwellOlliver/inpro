@@ -5,6 +5,8 @@ import { Slot, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 import { AuthProvider, useAuth } from "../features/auth/context/auth.context";
 
+import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
+
 function AppGate({ children }: { children: React.ReactNode }) {
   const { status } = useAuth();
   const segments = useSegments();
@@ -30,8 +32,10 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <AppGate>
-          <Slot />
-        </AppGate>
+    <GluestackUIProvider mode="dark">
+      <Slot />
+    </GluestackUIProvider>
+    </AppGate>
       </AuthProvider>
     </QueryClientProvider>
   );

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "expo-router";
 import { useSignIn } from "../mutations/use-sign-in.mutation";
 import { Text, View } from "react-native";
+import { Box } from "@/components/ui/box";
 
 export function SignInScreen() {
   const [email, setEmail] = useState("");
