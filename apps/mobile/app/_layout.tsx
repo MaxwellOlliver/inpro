@@ -2,10 +2,11 @@ import "@/global.css";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../lib/query-client";
 import { Slot, useRouter, useSegments } from "expo-router";
+import type { Href } from "expo-router";
 import { useEffect } from "react";
 import { AuthProvider, useAuth } from "../features/auth/context/auth.context";
 
-import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
+import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 
 function AppGate({ children }: { children: React.ReactNode }) {
   const { status } = useAuth();
@@ -18,7 +19,7 @@ function AppGate({ children }: { children: React.ReactNode }) {
     const inAuthGroup = segments[0] === "(auth)";
 
     if (status === "unauthenticated" && !inAuthGroup) {
-      router.replace("/(auth)/sign-in");
+      router.replace("/(auth)" as Href);
     } else if (status === "authenticated" && inAuthGroup) {
       router.replace("/(app)");
     }
@@ -32,10 +33,10 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <AppGate>
-    <GluestackUIProvider mode="dark">
-      <Slot />
-    </GluestackUIProvider>
-    </AppGate>
+          <GluestackUIProvider mode="dark">
+            <Slot />
+          </GluestackUIProvider>
+        </AppGate>
       </AuthProvider>
     </QueryClientProvider>
   );

@@ -175,6 +175,12 @@ module.exports = {
           info: "rgb(var(--color-indicator-info)/<alpha-value>)",
           error: "rgb(var(--color-indicator-error)/<alpha-value>)",
         },
+        "primary-foreground":
+          "rgb(var(--color-primary-foreground)/<alpha-value>)",
+        "secondary-foreground":
+          "rgb(var(--color-secondary-foreground)/<alpha-value>)",
+        "tertiary-foreground":
+          "rgb(var(--color-tertiary-foreground)/<alpha-value>)",
       },
       fontFamily: {
         heading: undefined,
