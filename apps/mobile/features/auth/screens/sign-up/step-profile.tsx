@@ -1,5 +1,39 @@
-import { useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Button, ButtonText } from "@/components/ui/button";
+import { HStack } from "@/components/ui/hstack";
+import { Input, InputField } from "@/components/ui/input";
+import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
+import { Ionicons } from "@expo/vector-icons";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { z } from "zod";
+import { FormField } from "../../components/form-field";
+import { StepIndicator } from "../../components/step-indicator";
+
+const schema = z.object({
+  userName: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(30, "Username must be 30 characters or less")
+    .regex(
+      /^[a-z0-9_]+$/,
+      "Only lowercase letters, numbers, and underscores allowed",
+    ),
+  name: z
+    .string()
+    .min(2, "Display name must be at least 2 characters")
+    .max(50, "Display name must be 50 characters or less"),
+});
+
+type FormValues = z.infer<typeof schema>;
 
 interface StepProfileProps {
   initialData: { userName: string; name: string };
@@ -8,53 +42,159 @@ interface StepProfileProps {
 }
 
 export function StepProfile({ initialData, onNext, onBack }: StepProfileProps) {
-  const [userName, setUserName] = useState(initialData.userName);
-  const [name, setName] = useState(initialData.name);
+  const insets = useSafeAreaInsets();
 
-  const isValid = userName.trim().length > 0 && name.trim().length > 0;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      userName: initialData.userName,
+      name: initialData.name,
+    },
+  });
+
+  const onSubmit = (values: FormValues) => {
+    onNext({ userName: values.userName.trim(), name: values.name.trim() });
+  };
 
   return (
-    <View className="flex-1 justify-center px-6">
-      <Text className="text-center text-3xl font-bold text-black">Your Profile</Text>
-      <Text className="mt-1 text-center text-base text-neutral-500">
-        Step 2 of 3 - Tell us about yourself
-      </Text>
-
-      <View className="mt-4 gap-3">
-        <TextInput
-          className="rounded-lg border border-neutral-300 bg-white px-4 py-3 text-base"
-          placeholder="Username"
-          value={userName}
-          onChangeText={setUserName}
-          autoCapitalize="none"
-          autoComplete="username"
-        />
-        <TextInput
-          className="rounded-lg border border-neutral-300 bg-white px-4 py-3 text-base"
-          placeholder="Display Name"
-          value={name}
-          onChangeText={setName}
-          autoComplete="name"
-        />
-      </View>
-
-      <View className="mt-4 flex-row gap-3">
-        <Pressable
-          onPress={onBack}
-          className="flex-1 items-center rounded-lg border border-neutral-300 bg-white px-4 py-3"
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: "#0C0C0F" }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View
+          style={{
+            flex: 1,
+            paddingTop: insets.top + 20,
+            paddingBottom: insets.bottom + 32,
+            paddingHorizontal: 28,
+          }}
         >
-          <Text className="font-semibold text-neutral-800">Back</Text>
-        </Pressable>
-        <Pressable
-          onPress={() => onNext({ userName: userName.trim(), name: name.trim() })}
-          disabled={!isValid}
-          className={`flex-1 items-center rounded-lg bg-blue-600 px-4 py-3 ${
-            !isValid ? "opacity-60" : ""
-          }`}
-        >
-          <Text className="font-semibold text-white">Next</Text>
-        </Pressable>
-      </View>
-    </View>
+          {/* Back button */}
+          <Pressable
+            onPress={onBack}
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 20,
+              backgroundColor: "#1A1A20",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: 32,
+            }}
+          >
+            <Ionicons name="arrow-back" size={20} color="#FFFFFF" />
+          </Pressable>
+
+          {/* Step indicator */}
+          <StepIndicator current={1} total={3} />
+
+          {/* Header */}
+          <View className="mb-10 mt-8">
+            <Text
+              size="xs"
+              bold
+              style={{ color: "#9B59C5", letterSpacing: 3, marginBottom: 16 }}
+            >
+              INPRO
+            </Text>
+            <Text
+              bold
+              style={{
+                fontSize: 36,
+                color: "#F0F0F5",
+                lineHeight: 44,
+                marginBottom: 8,
+              }}
+            >
+              Your profile
+            </Text>
+            <Text style={{ color: "#606070", fontSize: 16 }}>
+              Tell us who you are
+            </Text>
+          </View>
+
+          {/* Form */}
+          <VStack space="lg">
+            <FormField
+              label="Username"
+              error={errors.userName?.message}
+              hint="Only lowercase letters, numbers, and underscores"
+            >
+              <Controller
+                control={control}
+                name="userName"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    size="lg"
+                    variant="outline"
+                    isInvalid={!!errors.userName}
+                  >
+                    <InputField
+                      value={value}
+                      onChangeText={(text) => onChange(text.toLowerCase())}
+                      onBlur={onBlur}
+                      placeholder="your_username"
+                      placeholderTextColor="#505060"
+                      autoCapitalize="none"
+                      autoComplete="username"
+                      className="text-white"
+                    />
+                  </Input>
+                )}
+              />
+            </FormField>
+
+            <FormField label="Display name" error={errors.name?.message}>
+              <Controller
+                control={control}
+                name="name"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input size="lg" variant="outline" isInvalid={!!errors.name}>
+                    <InputField
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      placeholder="Your Name"
+                      placeholderTextColor="#505060"
+                      autoComplete="name"
+                      className="text-white"
+                    />
+                  </Input>
+                )}
+              />
+            </FormField>
+
+            <HStack space="md" className="mt-2">
+              <Button
+                size="xl"
+                variant="outline"
+                className="flex-1"
+                action="secondary"
+                onPress={onBack}
+              >
+                <ButtonText style={{ color: "#FFFFFF" }}>Back</ButtonText>
+              </Button>
+              <Button
+                size="xl"
+                action="primary"
+                className="flex-1"
+                onPress={handleSubmit(onSubmit)}
+              >
+                <ButtonText className="tracking-wide">Continue</ButtonText>
+              </Button>
+            </HStack>
+          </VStack>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
