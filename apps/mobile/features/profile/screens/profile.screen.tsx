@@ -353,7 +353,7 @@ export function ProfileScreen() {
                     : colors.typography[400],
               }}
             >
-              About me
+              Career
             </Text>
           </Pressable>
         </HStack>
