@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import { ImageBackground, View } from "react-native";
+import { ImageBackground } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button, ButtonText } from "@/components/ui/button";
@@ -32,7 +32,10 @@ export function HomeScreen() {
             <Text size="5xl" bold className="tracking-tight text-white">
               InPro
             </Text>
-            <Text size="lg" className="mt-3 leading-relaxed text-white/80">
+            <Text
+              size="lg"
+              className="mt-3 leading-relaxed text-white/80 mb-16"
+            >
               Connect, create, and grow with a community that inspires you.
             </Text>
 

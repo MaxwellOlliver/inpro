@@ -19,7 +19,12 @@ export function SignUpScreen() {
 
   const handleSubmit = (data: { bio: string; location: string }) => {
     const fullData = { ...formData, ...data } as RegisterRequest;
-    signUp.mutate(fullData);
+    signUp.mutate(fullData, {
+      onError: (error) =>
+        console.log(
+          (error as unknown as any)?.response?.data?.message || error.message,
+        ),
+    });
   };
 
   switch (step) {

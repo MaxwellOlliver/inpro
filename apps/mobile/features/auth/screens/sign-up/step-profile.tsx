@@ -1,5 +1,4 @@
 import { Button, ButtonText } from "@/components/ui/button";
-import { HStack } from "@/components/ui/hstack";
 import { Input, InputField } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
@@ -173,7 +172,15 @@ export function StepProfile({ initialData, onNext, onBack }: StepProfileProps) {
               />
             </FormField>
 
-            <HStack space="md" className="mt-2">
+            <VStack space="md" className="mt-2">
+              <Button
+                size="xl"
+                action="primary"
+                className="flex-1"
+                onPress={handleSubmit(onSubmit)}
+              >
+                <ButtonText className="tracking-wide">Continue</ButtonText>
+              </Button>
               <Button
                 size="xl"
                 variant="outline"
@@ -183,15 +190,7 @@ export function StepProfile({ initialData, onNext, onBack }: StepProfileProps) {
               >
                 <ButtonText style={{ color: "#FFFFFF" }}>Back</ButtonText>
               </Button>
-              <Button
-                size="xl"
-                action="primary"
-                className="flex-1"
-                onPress={handleSubmit(onSubmit)}
-              >
-                <ButtonText className="tracking-wide">Continue</ButtonText>
-              </Button>
-            </HStack>
+            </VStack>
           </VStack>
         </View>
       </ScrollView>

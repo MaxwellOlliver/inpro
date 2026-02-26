@@ -42,7 +42,15 @@ export function SignInScreen() {
   });
 
   const onSubmit = (values: FormValues) => {
-    signIn.mutate({ email: values.email.trim(), password: values.password });
+    signIn.mutate(
+      { email: values.email.trim(), password: values.password },
+      {
+        onError: (error) =>
+          console.log(
+            (error as unknown as any)?.response?.data?.message || error.message,
+          ),
+      },
+    );
   };
 
   return (
@@ -111,12 +119,7 @@ export function SignInScreen() {
                 control={control}
                 name="email"
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    size="lg"
-                    variant="outline"
-                    isInvalid={!!errors.email}
-                    className="rounded-2xl border-background-200 bg-background-50"
-                  >
+                  <Input size="lg" variant="outline" isInvalid={!!errors.email}>
                     <InputField
                       value={value}
                       onChangeText={onChange}
@@ -142,7 +145,6 @@ export function SignInScreen() {
                     size="lg"
                     variant="outline"
                     isInvalid={!!errors.password}
-                    className="rounded-2xl border-background-200 bg-background-50"
                   >
                     <InputField
                       value={value}
@@ -182,11 +184,14 @@ export function SignInScreen() {
                   backgroundColor: "rgba(229, 57, 53, 0.1)",
                   borderWidth: 1,
                   borderColor: "rgba(229, 57, 53, 0.3)",
-                  borderRadius: 12,
+                  borderRadius: 2,
                   padding: 12,
                 }}
               >
-                <Text size="sm" style={{ color: "#E53935", textAlign: "center" }}>
+                <Text
+                  size="sm"
+                  style={{ color: "#E53935", textAlign: "center" }}
+                >
                   {signIn.error.message || "Sign in failed. Please try again."}
                 </Text>
               </View>
@@ -195,7 +200,7 @@ export function SignInScreen() {
             <Button
               size="xl"
               action="primary"
-              className="mt-2 rounded-2xl"
+              className="mt-2"
               onPress={handleSubmit(onSubmit)}
               disabled={signIn.isPending}
             >
@@ -209,7 +214,9 @@ export function SignInScreen() {
 
           {/* Footer */}
           <View className="mt-auto flex-row items-center justify-center pt-10">
-            <Text style={{ color: "#606070" }}>Don't have an account? </Text>
+            <Text style={{ color: "#606070" }}>
+              Don&apos;t have an account?{" "}
+            </Text>
             <Link href="/(auth)/sign-up" asChild>
               <Pressable>
                 <Text style={{ color: "#9B59C5" }} bold>
