@@ -14,6 +14,7 @@ export function useSignUp() {
 
       const device = getDeviceType();
       const deviceId = await getDeviceId();
+
       return signIn({
         email: data.email,
         password: data.password,

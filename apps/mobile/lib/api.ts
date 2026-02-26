@@ -75,7 +75,7 @@ api.interceptors.response.use(undefined, async (error: AxiosError) => {
       { headers: { Cookie: `refreshToken=${storedRefreshToken}` } },
     );
 
-    const tokens: AuthTokens = response.data.tokens;
+    const tokens: AuthTokens = response.data;
     await TokenStorage.saveTokens(tokens);
     authCallbacks?.updateTokens(tokens);
 

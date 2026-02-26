@@ -19,13 +19,10 @@ interface AuthState {
 }
 
 interface AuthContextValue extends AuthState {
-  login: (
-    tokens: AuthTokens,
-    user: { id: string; email: string },
-    profile: UserProfile,
-  ) => Promise<void>;
+  login: (tokens: AuthTokens) => Promise<void>;
   logout: () => Promise<void>;
   updateTokens: (tokens: AuthTokens) => void;
+  setProfile: (profile: UserProfile) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -37,17 +34,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     profile: null,
   });
 
-  const login = useCallback(
-    async (
-      tokens: AuthTokens,
-      user: { id: string; email: string },
-      profile: UserProfile,
-    ) => {
-      await TokenStorage.saveTokens(tokens);
-      setState({ status: "authenticated", user, profile });
-    },
-    [],
-  );
+  const login = useCallback(async (tokens: AuthTokens) => {
+    await TokenStorage.saveTokens(tokens);
+    setState({ status: "authenticated", user: null, profile: null });
+  }, []);
 
   const logout = useCallback(async () => {
     await TokenStorage.clearTokens();
@@ -56,6 +46,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const updateTokens = useCallback((tokens: AuthTokens) => {
     TokenStorage.saveTokens(tokens);
+  }, []);
+
+  const setProfile = useCallback((profile: UserProfile) => {
+    setState((prev) => ({ ...prev, profile }));
   }, []);
 
   // Bootstrap: check for existing tokens on mount
@@ -79,8 +73,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [updateTokens, logout]);
 
   const value = useMemo(
-    () => ({ ...state, login, logout, updateTokens }),
-    [state, login, logout, updateTokens],
+    () => ({ ...state, login, logout, updateTokens, setProfile }),
+    [state, login, logout, updateTokens, setProfile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

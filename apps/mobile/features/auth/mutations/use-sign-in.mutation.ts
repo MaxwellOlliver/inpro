@@ -14,7 +14,7 @@ export function useSignIn() {
       return signIn({ ...data, device, deviceId });
     },
     onSuccess: async (response) => {
-      await login(response.tokens, response.user, response.profile);
+      await login(response);
     },
   });
 }

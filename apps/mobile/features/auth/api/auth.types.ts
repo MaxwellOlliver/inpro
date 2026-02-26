@@ -16,6 +16,11 @@ export interface RegisterRequest {
   location: string;
 }
 
+export interface CreateUser {
+  email: string;
+  password: string;
+}
+
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
@@ -28,6 +33,10 @@ export interface UserProfile {
   name: string;
   bio: string;
   location: string;
+  avatarId?: string | null;
+  bannerId?: string | null;
+  avatarUrl?: string | null;
+  bannerUrl?: string | null;
 }
 
 export interface RegisterResponse {
@@ -38,11 +47,4 @@ export interface RegisterResponse {
   profile: UserProfile;
 }
 
-export interface SignInResponse {
-  tokens: AuthTokens;
-  user: {
-    id: string;
-    email: string;
-  };
-  profile: UserProfile;
-}
+export interface SignInResponse extends AuthTokens {}
