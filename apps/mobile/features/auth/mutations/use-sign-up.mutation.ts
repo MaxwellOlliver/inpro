@@ -23,7 +23,7 @@ export function useSignUp() {
       });
     },
     onSuccess: async (response) => {
-      await login(response.tokens, response.user, response.profile);
+      await login(response.tokens);
     },
   });
 }

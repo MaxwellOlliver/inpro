@@ -1,5 +1,6 @@
-import { Modal, View, ActivityIndicator } from "react-native";
+import { Image, Modal, View, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
@@ -7,7 +8,7 @@ import { Pressable } from "@/components/ui/pressable";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { useSignOut } from "../../auth/mutations/use-sign-out.mutation";
-import { useAuth } from "../../auth/context/auth.context";
+import { useProfileQuery } from "../../auth/queries/use-profile.query";
 import { useThemeColors } from "../../../shared/theme/use-theme-colors";
 
 interface AppDrawerProps {
@@ -46,7 +47,8 @@ function DrawerItem({ icon, label, onPress, destructive }: DrawerItemProps) {
 export function AppDrawer({ open, onClose }: AppDrawerProps) {
   const insets = useSafeAreaInsets();
   const colors = useThemeColors();
-  const { profile } = useAuth();
+  const router = useRouter();
+  const { data: profile } = useProfileQuery();
   const signOut = useSignOut();
 
   return (
@@ -69,16 +71,23 @@ export function AppDrawer({ open, onClose }: AppDrawerProps) {
         >
           <VStack className="border-b border-outline-0 p-6" space="md">
             <HStack space="md">
-              <Box
-                className="bg-background-50 rounded-full items-center justify-center"
-                style={{ width: 42, height: 42 }}
-              >
-                <Ionicons
-                  name="person"
-                  size={22}
-                  color={colors.typography[400]}
+              {profile?.avatarUrl ? (
+                <Image
+                  source={{ uri: profile.avatarUrl }}
+                  style={{ width: 42, height: 42, borderRadius: 21 }}
                 />
-              </Box>
+              ) : (
+                <Box
+                  className="bg-background-50 rounded-full items-center justify-center"
+                  style={{ width: 42, height: 42 }}
+                >
+                  <Ionicons
+                    name="person"
+                    size={22}
+                    color={colors.typography[400]}
+                  />
+                </Box>
+              )}
               <Box>
                 <Text
                   bold
@@ -102,7 +111,10 @@ export function AppDrawer({ open, onClose }: AppDrawerProps) {
             <DrawerItem
               icon="person-outline"
               label="Perfil"
-              onPress={onClose}
+              onPress={() => {
+                onClose();
+                router.push("/(app)/profile");
+              }}
             />
             <DrawerItem
               icon="settings-outline"
