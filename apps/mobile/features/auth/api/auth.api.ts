@@ -1,13 +1,14 @@
 import { api } from "../../../lib/api";
 import type {
-  RegisterRequest,
+  CreateUser,
   RegisterResponse,
   SignInRequest,
   SignInResponse,
+  UserProfile,
 } from "./auth.types";
 
 export async function registerUser(
-  data: RegisterRequest,
+  data: CreateUser,
 ): Promise<RegisterResponse> {
   const response = await api.post<RegisterResponse>("/register", data);
   return response.data;
@@ -29,4 +30,9 @@ export async function refreshToken(token: string): Promise<SignInResponse> {
 
 export async function signOut(): Promise<void> {
   await api.delete("/auth/sign-out");
+}
+
+export async function getProfile(): Promise<UserProfile> {
+  const response = await api.get<UserProfile>("/profile");
+  return response.data;
 }

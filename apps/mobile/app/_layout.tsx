@@ -14,6 +14,7 @@ function AppGate({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    console.log("Auth status:", status);
     if (status === "loading") return;
 
     const inAuthGroup = segments[0] === "(auth)";
