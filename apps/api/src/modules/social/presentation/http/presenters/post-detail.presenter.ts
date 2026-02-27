@@ -9,12 +9,14 @@ export class PostDetailPresenter {
       text: readModel.text,
       visibility: readModel.visibility,
       parentId: readModel.parentId,
-      mediaIds: readModel.mediaIds,
+      media: readModel.media,
       commentCount: readModel.commentCount,
       likeCount: readModel.likeCount,
       isLikedByMe: readModel.isLikedByMe,
+      hasReplies: readModel.hasReplies,
       createdAt: readModel.createdAt,
       updatedAt: readModel.updatedAt,
+      author: readModel.author,
     };
   }
 }
